@@ -20,7 +20,6 @@ public class Finder : MonoBehaviour
             && transform.position.y == _goal.transform.position.y)
         {
             SceneManager.LoadScene("End");
-            
         }
     }
 }

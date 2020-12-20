@@ -1,20 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public string TextId;
+
+    // Use this for initialization
     void Start()
     {
+        Debug.Log(Translator.Fields["youSee"]);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("индекс такой:");
-        Debug.Log(SceneManager.GetActiveScene().buildIndex);
+
     }
 }
