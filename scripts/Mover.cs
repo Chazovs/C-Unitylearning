@@ -9,19 +9,27 @@ public class Mover : MonoBehaviour
 
     Vector2 _movementDirection;
     Vector3 _destination;
-    private float step;
+    private float step = 16f;
     private float offsetX;
     private float offsetY;
     private Vector3 _startField;
     private Vector3 _endField;
-
+    private float fieldSize = 10;
     void Start()
     {
-        step = 15;
+        transform.position = new Vector3(
+            transform.position.x + (step / 2),
+            transform.position.y - (step/2) + (step * fieldSize),
+            transform.position.z
+            );
+
         _startField = transform.position;
-        _endField = new Vector3();
-        _endField.x = _startField.x + step * 10;
-        _endField.y = _startField.y - step * 10;
+        _endField = new Vector3(
+            _startField.x + step * 9,
+            _startField.y - step * 9,
+            transform.position.z
+            );
+
         _destination = transform.position;
     }
     void Update()
@@ -31,19 +39,19 @@ public class Mover : MonoBehaviour
 
         if (input.x > 0)
         {
-            _movementDirection.Set(input.x+step, 0f);
+            _movementDirection.Set(step, 0f);
         }
          else if (input.x < 0)
         {
-            _movementDirection.Set(input.x-step, 0f);
+            _movementDirection.Set(-step, 0f);
         }
         else if (input.y > 0)
         {
-            _movementDirection.Set(0f, input.y+step);
+            _movementDirection.Set(0f, step);
         }
         else if (input.y < 0)
         {
-            _movementDirection.Set(0f, input.y-step);
+            _movementDirection.Set(0f, -step);
         }
         else
         {

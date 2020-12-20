@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Finder : MonoBehaviour
 {
@@ -15,7 +16,11 @@ public class Finder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*_goal.transform.position.x;
-        _goal.transform.position.y;*/
+        if(transform.position.x == _goal.transform.position.x
+            && transform.position.y == _goal.transform.position.y)
+        {
+            SceneManager.LoadScene("End");
+            
+        }
     }
 }
