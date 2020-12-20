@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class Timer : MonoBehaviour
 {
     Image timerBar;
-    public float maTime = 20f;
+    private float maTime = 200f;
     float timeLeft;
     void Start()
     {

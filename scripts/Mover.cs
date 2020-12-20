@@ -12,11 +12,17 @@ public class Mover : MonoBehaviour
     private float step;
     private float offsetX;
     private float offsetY;
+    private Vector3 _startField;
+    private Vector3 _endField;
 
     void Start()
     {
-        _destination = transform.position;
         step = 15;
+        _startField = transform.position;
+        _endField = new Vector3();
+        _endField.x = _startField.x + step * 10;
+        _endField.y = _startField.y - step * 10;
+        _destination = transform.position;
     }
     void Update()
     {
@@ -49,7 +55,17 @@ public class Mover : MonoBehaviour
             _destination = transform.position + (Vector3)_movementDirection;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
+        if (_destination.x >= _startField.x
+            && _destination.x <= _endField.x
+            && _destination.y <= _startField.y
+            && _destination.y >= _endField.y
+            ) {
+            transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
 
+        }
+        else
+        {
+            _destination = transform.position;
+        }
     }
 }
