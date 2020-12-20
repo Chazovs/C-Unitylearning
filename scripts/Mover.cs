@@ -5,42 +5,51 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
-    public float speed = 150f;
+    private float speed = 10f;
 
     Vector2 _movementDirection;
     Vector3 _destination;
     private float step;
+    private float offsetX;
+    private float offsetY;
 
     void Start()
     {
         _destination = transform.position;
-        step = 150;
+        step = 15;
     }
     void Update()
     {
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        if (input.x != 0) {
 
-            float offsetX = input.x >= 0 ? input.x + step : input.x - step;
-
-            _movementDirection.Set(offsetX, 0f);
-        }
-        else if (input.y != 0)
+        if (input.x > 0)
         {
-            float offsetY = input.y >= 0 ? input.y + step : input.y - step;
-
-            _movementDirection.Set(0f, offsetY);
+            _movementDirection.Set(input.x+step, 0f);
+        }
+         else if (input.x < 0)
+        {
+            _movementDirection.Set(input.x-step, 0f);
+        }
+        else if (input.y > 0)
+        {
+            _movementDirection.Set(0f, input.y+step);
+        }
+        else if (input.y < 0)
+        {
+            _movementDirection.Set(0f, input.y-step);
         }
         else
         {
             _movementDirection = Vector2.zero;
         }
 
-        if (_destination == transform.position) {
+        if (_destination == transform.position)
+        {
             _destination = transform.position + (Vector3)_movementDirection;
         }
 
         transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
+
     }
 }
