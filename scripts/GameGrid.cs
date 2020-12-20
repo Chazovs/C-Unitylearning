@@ -9,14 +9,14 @@ public class GameGrid : MonoBehaviour
     public GameObject block;
 
     GameObject[,] gameGrids;
-    private float step = 3;
+    private float step = 16;
 
     void CreateGrid()
     {
         Vector3 startPosition = transform.position;
 
-        float xx = startPosition.x + step;
-        float yy = startPosition.y - step;
+        float xx = startPosition.x+8;
+        float yy = startPosition.y+8;
 
         gameGrids = new GameObject[gridWidth, gridWidth];
 
@@ -27,9 +27,9 @@ public class GameGrid : MonoBehaviour
                 gameGrids[x, y] = Instantiate(block);
                 gameGrids[x, y].GetComponent<GridBlocks>().currentBlockIndex = 0;
                 gameGrids[x, y].transform.position = new Vector3(xx, yy, startPosition.z);
-                xx++;
+                xx= xx+step;
             }
-            xx = startPosition.x + step;
+            xx = startPosition.x + step/2;
             yy = yy+step;
         }
     }
