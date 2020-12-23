@@ -1,1 +1,10 @@
-﻿youSee=Tы видишь
+﻿you=Ты
+see=увидел
+youSee=услышал
+youSee=почувствовал
+youSee=вкус
+youSee=запах
+youSee=ветер
+youSee=лес
+youSee=поле
+youSee=одиноко стоящую на опушке избу
