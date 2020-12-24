@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,10 +18,10 @@ public class Mover : MonoBehaviour
     private Card[,] gameFields = new Card[10, 10];
 
     /*позиция героя */
-    private Position heroPosition;
+    private Position heroPosition = new Position();
 
     /*позиция цели */
-    private Position goalPosition;
+    private Position goalPosition = new Position();
  
     private GameObject _goal;
     private GameObject _block;
@@ -123,15 +122,15 @@ public class Mover : MonoBehaviour
         }
     }
     /**
-     * заполняет поле карточками
+     * <summary>заполняет поле карточками</summary>
      */
     private void fillGameFields()
     {
-        Card[] safeFields = getSafeFields();
-        Card[] dangerousFields = getDangerousFields();
+        List<Card> safeFields = getSafeFields();
+        List<Card> dangerousFields = getDangerousFields();
 
-        setSafePath(safeFields);
-        setDangerousFields(dangerousFields);
+        /*setSafePath(safeFields);
+        setDangerousFields(dangerousFields);*/
     }
 
     private void setDangerousFields(Card[] dangerousFields)
@@ -144,14 +143,14 @@ public class Mover : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    private Card[] getDangerousFields()
+    private List<Card> getDangerousFields()
     {
         CardRepository repository = new CardRepository();
 
         return repository.getCardsBySafety(false);
     }
 
-    private Card[] getSafeFields()
+    private List<Card> getSafeFields()
     {
         CardRepository repository = new CardRepository();
 
