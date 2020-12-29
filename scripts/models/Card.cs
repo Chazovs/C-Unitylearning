@@ -3,6 +3,11 @@
     /**
      * текст карточки
      */
+    public System.Int64 id;
+
+    /**
+     * текст карточки
+     */
     public string text;
 
     /**
