@@ -46,9 +46,10 @@ public class Mover : MonoBehaviour
             transform.position.z
             );
 
-        fillGameFields();
+        GameFieldService fieldService = new GameFieldService(fieldSize, heroPosition, goalPosition);
+        gameFields =  fieldService.fillGameFields();
 
-        string myX = "";
+/*        string myX = "";
         for (int i = 0; i < fieldSize; i++) //строки
         {
             for (int j = 0; j < fieldSize; j++)//столбцы
@@ -57,7 +58,8 @@ public class Mover : MonoBehaviour
                 {
                     myX += "x" + i + "y" + j + "*";
                 } else if (goalPosition.x == i+1 && goalPosition.y == j+1) {
-                    myX += "x" + i + "y" + j + "O ";
+                    string str = gameFields[i, j].isWin ? "V " : "! ";
+                    myX += "x" + i + "y" + j + "O" + str;
                 }
                 else
                 {
@@ -68,7 +70,7 @@ public class Mover : MonoBehaviour
             
         }
         Debug.Log(myX);
-        Debug.Log("goalPosition x: " + goalPosition.x + "y: " + goalPosition.y);
+        Debug.Log("goalPosition x: " + goalPosition.x + "y: " + goalPosition.y);*/
 
         _startField = transform.position;
         _endField = new Vector3(
@@ -94,6 +96,9 @@ public class Mover : MonoBehaviour
             if (heroPosition.y > 10) heroPosition.y = 10;
             if (heroPosition.y < 1) heroPosition.y = 1;
         }
+
+        CardService cardService = new CardService();
+        cardService.showCard(gameFields[(int) heroPosition.x - 1, (int) heroPosition.y - 1]);
 
         _horizontVector = Input.GetAxisRaw("Horizontal");
         _verticalVector = Input.GetAxisRaw("Vertical");
@@ -142,222 +147,5 @@ public class Mover : MonoBehaviour
         {
             _destination = transform.position;
         }
-    }
-    /**
-     * <summary>заполняет поле карточками</summary>
-     */
-    private void fillGameFields()
-    {
-        List<Card> safeFields = getSafeFields();
-        List<Card> dangerousFields = getDangerousFields();
-
-        /*setSafePath(safeFields);*/
-        setSafePathVectors(safeFields);
-        setDangerousFields(dangerousFields);
-    }
-
-    private void setSafePathVectors(List<Card> safeFields)
-    {
-        safeFields = Shuffler.listShuffler(safeFields);
-
-        Position cursor = new Position();
-        cursor.x = heroPosition.x;
-        cursor.y = heroPosition.y;
-
-        System.Random rnd = new System.Random(DateTime.Now.Millisecond);
-
-        int directionKey;
-        int safeFieldsIndex = 0;
-
-        while (cursor.x != goalPosition.x || cursor.y != goalPosition.y) {
-
-            //вычисляем расстояние до края поля в каждом направлении
-            float upDistance = 10 - cursor.y;
-            float downDistance = cursor.y - 1;
-            float rightDistance = 10 - cursor.x;
-            float leftDistance = cursor.x - 1;
-
-            float[] distanceArr = {upDistance, downDistance, rightDistance, leftDistance };
-
-            //ишем подходящее направление пока не найдем
-            while (true)
-        {
-           directionKey = rnd.Next(0, 4);
-
-            if (distanceArr[directionKey] > 0)
-            {
-                break;
-            }
-        }
-        
-        //решаем, как далеко мы пойдем в этом направлении
-        int distance = rnd.Next(0, (int)distanceArr[directionKey] + 1);
-
-        Position endPoint = new Position();
-
-        switch (directionKey)
-        {
-            case 0:
-                endPoint.x = cursor.x;
-                endPoint.y = cursor.y+distance;
-                break;
-            case 1:
-                endPoint.x = cursor.x;
-                endPoint.y = cursor.y - distance;
-                break;
-            case 2:
-                endPoint.x = cursor.x + distance;
-                endPoint.y = cursor.y ;
-                break;
-            case 3:
-                endPoint.x = cursor.x - distance;
-                endPoint.y = cursor.y;
-                break;
-        }
-
-        //идем в этом направлении пока не придем
-        while (cursor.x != endPoint.x || cursor.y != endPoint.y)
-        {
-            switch (directionKey)
-            {
-                //вверх
-                case 0:
-                    cursor.y++;
-                    break;
-                //вниз
-                case 1:
-                    cursor.y--;
-                    break;
-                //вправо
-                case 2:
-                    cursor.x++;
-                    break;
-                //влево
-                case 3:
-                    cursor.x--;
-                    break;
-            }
-
-            if((cursor.x == goalPosition.x && cursor.y == goalPosition.y)) {
-                    break;
-            }
-
-            if (
-                (cursor.x != heroPosition.x || cursor.y != heroPosition.y)
-                && gameFields[(int) cursor.x - 1, (int) cursor.y - 1] == null
-                )
-            {
-                gameFields[(int) cursor.x - 1, (int) cursor.y - 1] = safeFields[safeFieldsIndex];
-            }
-        }
-
-            if ((cursor.x == goalPosition.x && cursor.y == goalPosition.y))
-            {
-                break;
-            }
-
-            safeFieldsIndex++;
-
-            safeFieldsIndex = safeFieldsIndex > safeFields.Count - 1 ? 0 : safeFieldsIndex;
-        }
-    }
-
-    private void setDangerousFields(List<Card> dangerousFields)
-    {
-        dangerousFields = Shuffler.listShuffler(dangerousFields);
-
-        int dangerousFieldsIndex = 0;
-
-        for (int i = 0; i < fieldSize; i++)
-        {
-            for (int j = 0; j < fieldSize; j++)
-            {
-                if (gameFields[i, j] == null)
-                {
-                    gameFields[i, j] = dangerousFields[dangerousFieldsIndex];
-
-                    dangerousFieldsIndex++;
-
-                    dangerousFieldsIndex = dangerousFieldsIndex > dangerousFields.Count-1 ? 0 : dangerousFieldsIndex;
-                }
-            }
-        }
-    }
-
-    /**
-     * <summary>Прокладывает дорогу к цели</summary>
-     */
-    private void setSafePath(List<Card> safeFields)
-    {
-        safeFields = Shuffler.listShuffler(safeFields);
-
-        Position cursor = new Position();
-            cursor.x = heroPosition.x;
-            cursor.y = heroPosition.y;
-
-        int safeFieldsIndex = 0;
-        int direction;
-        Position newPosition = new Position();
-
-        System.Random rnd = new System.Random(DateTime.Now.Millisecond);
-
-        do
-        { direction = rnd.Next(1, 5);
-            newPosition.x = cursor.x;
-            newPosition.y = cursor.y;
-
-            switch (direction)
-            {
-                case 1:
-                    newPosition.x++;
-                    break;
-                case 2:
-                    newPosition.y++;
-                    break;
-                case 3:
-                    newPosition.x--;
-                    break;
-                case 4:
-                    newPosition.y--;
-                    break;
-            }
-
-            if (
-                newPosition.x > 0
-                && newPosition.x < 11
-                && newPosition.y > 0
-                && newPosition.y < 11
-                && (newPosition.x != heroPosition.x || newPosition.y != heroPosition.y)
-                )
-            {
-                cursor.x = newPosition.x;
-                cursor.y = newPosition.y;
-
-                if (gameFields[(int)cursor.x - 1, (int)cursor.y - 1] is null 
-                    && (cursor.x != heroPosition.x  || cursor.y != heroPosition.y)
-                    )
-                {
-                    gameFields[(int)cursor.x - 1, (int)cursor.y - 1] = safeFields[safeFieldsIndex];
-
-                    safeFieldsIndex++;
-
-                    safeFieldsIndex = safeFieldsIndex > safeFields.Count-1 ? 0 : safeFieldsIndex;
-                }
-            }
-        } while (cursor.x != goalPosition.x || cursor.y != goalPosition.y);
-    }
-
-    private List<Card> getDangerousFields()
-    {
-        CardRepository repository = new CardRepository();
-
-        return repository.getCardsBySafety(false);
-    }
-
-    private List<Card> getSafeFields()
-    {
-        CardRepository repository = new CardRepository();
-
-        return repository.getCardsBySafety(true);
     }
 }

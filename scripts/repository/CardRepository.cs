@@ -29,6 +29,7 @@ public class CardRepository : AbstactRepository
             card.text = cardsDataReader[1].ToString();
             card.imageFileName = cardsDataReader[2].ToString();
             card.isSafe = cardsDataReader[3].ToString() == "1" ? true : false;
+            card.isWin = false;
             
             cards.Add(card);
             
