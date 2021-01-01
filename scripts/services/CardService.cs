@@ -7,14 +7,23 @@ using UnityEngine.SceneManagement;
 public class CardService
 {
     SpriteRenderer cardObjectComponent;
-    SpriteRenderer cardTextComponent;
+    Text cardTextComponent;
+    RawImage cardImageComponent;
+    Button goCardButtonComponent;
+    Button backCardButtonComponent;
 
     private GameObject cardObject;
     private GameObject cardText;
     private GameObject cardImage;
     private GameObject goCardButton;
     private GameObject backCardButton;
+    private GameObject hero;
+
     private Texture2D cardImageFile;
+
+    Mover mover;
+
+    Card currentCard;
 
     public CardService()
     {
@@ -23,35 +32,48 @@ public class CardService
         cardImage = GameObject.Find("cardImage");
         goCardButton = GameObject.Find("goCardButton");
         backCardButton = GameObject.Find("backCardButton");
+        hero = GameObject.Find("Hero");
 
         cardObjectComponent = cardObject.GetComponent<SpriteRenderer>();
-       /* cardTextComponent = cardText.GetComponent<SpriteRenderer>();*/
+        cardTextComponent = cardText.GetComponent<Text>();
+        cardImageComponent = cardImage.GetComponent<RawImage>();
+        goCardButtonComponent = goCardButton.GetComponent<Button>();
+        backCardButtonComponent = backCardButton.GetComponent<Button>();
 
+        mover = hero.GetComponent<Mover>();
     }
 
     public void showCard(Card card)
     {
-        cardObjectComponent.enabled = true;
-        /*cardTextComponent.enabled = true;*/
+        currentCard = card;
 
-        cardText.GetComponent<Text>().text = card.text;
+        cardObjectComponent.enabled = true;
+        cardTextComponent.enabled = true;
+        cardImageComponent.enabled = true;
+        goCardButton.SetActive(true);
+        backCardButton.SetActive(true);
+
+        cardTextComponent.text = card.text;
 
         string imagePath = "img/cards/" + card.imageFileName;
         cardImageFile = Resources.Load(imagePath) as Texture2D;
-        cardImage.GetComponent<RawImage>().texture = cardImageFile;
+        cardImageComponent.texture = cardImageFile;
 
+        if (card.isSafe)
+        {
+            goCardButtonComponent.onClick.AddListener(safetyAction);
+        }
+        else { 
+            goCardButtonComponent.onClick.AddListener(dangerousAction);
+        }
 
-        Button goCardButtonComponent = goCardButton.GetComponent<Button>();
-        Button backCardButtonComponent = backCardButton.GetComponent<Button>();
-
-        UnityEngine.Events.UnityAction action = card.isSafe ? safetyAction : dangerousAction;
-        goCardButtonComponent.onClick.AddListener(action);
         backCardButtonComponent.onClick.AddListener(backAction);
     }
 
     private void safetyAction()
     {
-        Debug.Log("безопасное действие");
+        currentCard.isOpen = true;
+        mover.setCardInField(currentCard);
     }
 
     private void dangerousAction()
@@ -61,12 +83,17 @@ public class CardService
 
     private void backAction()
     {
-        Debug.Log("ход назад");
+        hideCard();
+        mover.goBack();
     }
 
-    public void hideCard(Card card)
+    public void hideCard()
     {
         cardObjectComponent.enabled = false;
         cardTextComponent.enabled = false;
+        cardImageComponent.enabled = false;
+
+        goCardButton.SetActive(false);
+        backCardButton.SetActive(false);
     }
 }

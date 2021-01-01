@@ -28,11 +28,17 @@ public class Mover : MonoBehaviour
     private float _horizontVector = 0;
     private float _verticalVector = 0;
 
+    Position previousPosition = new Position();
+
+    CardService cardService;
 
     void Start()
     {
-        heroPosition.x = 1;
-        heroPosition.y = 10;
+        cardService = new CardService();
+        cardService.hideCard();
+
+        heroPosition.x = previousPosition.x = 1;
+        heroPosition.y = previousPosition.y = 10;
 
         _goal = GameObject.Find("EndPoint");
         _block = GameObject.Find("block");
@@ -81,13 +87,27 @@ public class Mover : MonoBehaviour
 
         _destination = transform.position;
     }
+
+    internal void setCardInField(Card currentCard)
+    {
+        gameFields[(int)currentCard.position.x, (int)currentCard.position.y] = currentCard;
+    }
+
     void Update()
     {
 
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        if (Input.GetAxisRaw("Horizontal") != _horizontVector || Input.GetAxisRaw("Vertical") != _verticalVector)
+        if (
+            (Input.GetAxisRaw("Horizontal") != _horizontVector && Input.GetAxisRaw("Horizontal") != 0)
+            || (Input.GetAxisRaw("Vertical") != _verticalVector && Input.GetAxisRaw("Vertical") != 0)
+            )
         {
+            previousPosition.x = heroPosition.x;
+            previousPosition.y = heroPosition.y;
+
+            cardService.showCard(gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1]);
+
             heroPosition.x += input.x;
             heroPosition.y += input.y;
 
@@ -97,8 +117,7 @@ public class Mover : MonoBehaviour
             if (heroPosition.y < 1) heroPosition.y = 1;
         }
 
-        CardService cardService = new CardService();
-        cardService.showCard(gameFields[(int) heroPosition.x - 1, (int) heroPosition.y - 1]);
+       
 
         _horizontVector = Input.GetAxisRaw("Horizontal");
         _verticalVector = Input.GetAxisRaw("Vertical");
@@ -147,5 +166,20 @@ public class Mover : MonoBehaviour
         {
             _destination = transform.position;
         }
+    }
+
+    public void goBack()
+    {
+        _movementDirection.Set(
+            (previousPosition.x - heroPosition.x) * step,
+            (previousPosition.y - heroPosition.y) * step
+            );
+
+        _destination = transform.position + (Vector3)_movementDirection;
+
+        transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
+
+        heroPosition.x = previousPosition.x;
+        heroPosition.y = previousPosition.y;
     }
 }

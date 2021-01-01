@@ -144,7 +144,13 @@ public class GameFieldService
                     && gameFields[(int)cursor.x - 1, (int)cursor.y - 1] == null
                     )
                 {
-                    gameFields[(int)cursor.x - 1, (int)cursor.y - 1] = safeFields[safeFieldsIndex];
+                    Position arrayPosition = new Position();
+                    arrayPosition.x = cursor.x - 1;
+                    arrayPosition.y = cursor.y - 1;
+
+                    safeFields[safeFieldsIndex].position = arrayPosition;
+
+                    gameFields[(int)arrayPosition.x, (int)arrayPosition.y] = safeFields[safeFieldsIndex];
                 }
             }
 

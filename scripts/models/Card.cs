@@ -21,7 +21,17 @@
     public bool isSafe;
 
     /*
- * метка для победной клетки
- */
+     * метка для победной клетки
+     */
     public bool isWin;
+
+    /*
+     * открыта ли карта
+     */
+    public bool isOpen;
+
+    /*
+    * позиция на карте
+    */
+    public Position position;
 }
