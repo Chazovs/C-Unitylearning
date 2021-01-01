@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
+using UnityEngine.SceneManagement;
 
 public class CardService
 {
@@ -10,6 +12,8 @@ public class CardService
     private GameObject cardObject;
     private GameObject cardText;
     private GameObject cardImage;
+    private GameObject goCardButton;
+    private GameObject backCardButton;
     private Texture2D cardImageFile;
 
     public CardService()
@@ -17,6 +21,8 @@ public class CardService
         cardObject = GameObject.Find("card");
         cardText = GameObject.Find("cardText");
         cardImage = GameObject.Find("cardImage");
+        goCardButton = GameObject.Find("goCardButton");
+        backCardButton = GameObject.Find("backCardButton");
 
         cardObjectComponent = cardObject.GetComponent<SpriteRenderer>();
        /* cardTextComponent = cardText.GetComponent<SpriteRenderer>();*/
@@ -31,11 +37,31 @@ public class CardService
         cardText.GetComponent<Text>().text = card.text;
 
         string imagePath = "img/cards/" + card.imageFileName;
-        /*Texture2D othericon = (Texture2D)UnityEditor.AssetDatabase.LoadAssetAtPath(imagePath, typeof(Texture2D));*/
-        Debug.Log(imagePath);
         cardImageFile = Resources.Load(imagePath) as Texture2D;
         cardImage.GetComponent<RawImage>().texture = cardImageFile;
 
+
+        Button goCardButtonComponent = goCardButton.GetComponent<Button>();
+        Button backCardButtonComponent = backCardButton.GetComponent<Button>();
+
+        UnityEngine.Events.UnityAction action = card.isSafe ? safetyAction : dangerousAction;
+        goCardButtonComponent.onClick.AddListener(action);
+        backCardButtonComponent.onClick.AddListener(backAction);
+    }
+
+    private void safetyAction()
+    {
+        Debug.Log("безопасное действие");
+    }
+
+    private void dangerousAction()
+    {
+        SceneManager.LoadScene("End");
+    }
+
+    private void backAction()
+    {
+        Debug.Log("ход назад");
     }
 
     public void hideCard(Card card)
