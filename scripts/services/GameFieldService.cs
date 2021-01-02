@@ -10,17 +10,14 @@ public class GameFieldService
     /*позиция цели */
     private Position goalPosition = new Position();
 
-    private float fieldSize;
-
     private Card[,] gameFields;
 
     //Конструктор класса
-    public GameFieldService(float fieldS, Position hero, Position goal)
+    public GameFieldService(Position hero, Position goal)
     {
         goalPosition = goal;
         heroPosition = hero;
-        fieldSize = fieldS;
-        gameFields = new Card[(int) fieldSize, (int) fieldSize];
+        gameFields = new Card[(int) Constants.fieldSize, (int) Constants.fieldSize];
     }
 
     public Card[,] fillGameFields()
@@ -63,7 +60,6 @@ public class GameFieldService
 
         while (cursor.x != goalPosition.x || cursor.y != goalPosition.y)
         {
-
             //вычисляем расстояние до края поля в каждом направлении
             float upDistance = 10 - cursor.y;
             float downDistance = cursor.y - 1;
@@ -171,9 +167,9 @@ public class GameFieldService
 
         int dangerousFieldsIndex = 0;
 
-        for (int i = 0; i < fieldSize; i++)
+        for (int i = 0; i < Constants.fieldSize; i++)
         {
-            for (int j = 0; j < fieldSize; j++)
+            for (int j = 0; j < Constants.fieldSize; j++)
             {
                 if (gameFields[i, j] == null)
                 {

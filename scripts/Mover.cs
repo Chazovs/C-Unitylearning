@@ -5,17 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Mover : MonoBehaviour
 {
-    private float speed = 10f;
-
     Vector2 _movementDirection;
     Vector3 _destination;
-    private float step = 16f;
 
     private Vector3 _startField;
     private Vector3 _endField;
-    private float fieldSize = 10;
 
-    private Card[,] gameFields = new Card[10, 10];
+    private Card[,] gameFields;
 
     /*позиция героя */
     private Position heroPosition = new Position();
@@ -32,27 +28,31 @@ public class Mover : MonoBehaviour
 
     CardService cardService;
 
+    public bool isInputBlocked = false;
+
     void Start()
     {
+        gameFields = new Card[(int) Constants.fieldSize, (int)Constants.fieldSize];
+
         cardService = new CardService();
         cardService.hideCard();
 
         heroPosition.x = previousPosition.x = 1;
-        heroPosition.y = previousPosition.y = 10;
+        heroPosition.y = previousPosition.y = Constants.fieldSize;
 
         _goal = GameObject.Find("EndPoint");
         _block = GameObject.Find("block");
 
-        goalPosition.x = (float)(Math.Abs(_block.transform.position.x - step * 0.5) + _goal.transform.position.x) / step;
-        goalPosition.y = (float)(Math.Abs(_block.transform.position.y - step * 0.5) + _goal.transform.position.y) / step;
+        goalPosition.x = (float)(Math.Abs(_block.transform.position.x - Constants.step * 0.5) + _goal.transform.position.x) / Constants.step;
+        goalPosition.y = (float)(Math.Abs(_block.transform.position.y - Constants.step * 0.5) + _goal.transform.position.y) / Constants.step;
 
         transform.position = new Vector3(
-            transform.position.x + (step / 2),
-            transform.position.y - (step / 2) + (step * fieldSize),
+            transform.position.x + (Constants.step / 2),
+            transform.position.y - (Constants.step / 2) + (Constants.step * Constants.fieldSize),
             transform.position.z
             );
 
-        GameFieldService fieldService = new GameFieldService(fieldSize, heroPosition, goalPosition);
+        GameFieldService fieldService = new GameFieldService(heroPosition, goalPosition);
         gameFields =  fieldService.fillGameFields();
 
 /*        string myX = "";
@@ -80,8 +80,8 @@ public class Mover : MonoBehaviour
 
         _startField = transform.position;
         _endField = new Vector3(
-            _startField.x + step * 9,
-            _startField.y - step * 9,
+            _startField.x + Constants.step * (Constants.fieldSize - 1),
+            _startField.y - Constants.step * (Constants.fieldSize - 1),
             transform.position.z
             );
 
@@ -96,6 +96,9 @@ public class Mover : MonoBehaviour
     void Update()
     {
 
+        if (!isInputBlocked)
+        {
+
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         if (
@@ -106,18 +109,23 @@ public class Mover : MonoBehaviour
             previousPosition.x = heroPosition.x;
             previousPosition.y = heroPosition.y;
 
-            cardService.showCard(gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1]);
-
             heroPosition.x += input.x;
             heroPosition.y += input.y;
+            Debug.Log((int)heroPosition.x - 1);
+            Debug.Log((int)heroPosition.y - 1);
+           
+                Card currentCard = gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
+                if (currentCard.isOpen == false)
+                {
+                    isInputBlocked = true;
+                    cardService.showCard(gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1]);
+                }
 
-            if (heroPosition.x > 10) heroPosition.x = 10;
+            if (heroPosition.x > Constants.fieldSize) heroPosition.x = Constants.fieldSize;
             if (heroPosition.x < 1) heroPosition.x = 1;
-            if (heroPosition.y > 10) heroPosition.y = 10;
+            if (heroPosition.y > Constants.fieldSize) heroPosition.y = Constants.fieldSize;
             if (heroPosition.y < 1) heroPosition.y = 1;
         }
-
-       
 
         _horizontVector = Input.GetAxisRaw("Horizontal");
         _verticalVector = Input.GetAxisRaw("Vertical");
@@ -130,19 +138,19 @@ public class Mover : MonoBehaviour
 
         if (input.x > 0)
         {
-            _movementDirection.Set(step, 0f);
+            _movementDirection.Set(Constants.step, 0f);
         }
         else if (input.x < 0)
         {
-            _movementDirection.Set(-step, 0f);
+            _movementDirection.Set(-Constants.step, 0f);
         }
         else if (input.y > 0)
         {
-            _movementDirection.Set(0f, step);
+            _movementDirection.Set(0f, Constants.step);
         }
         else if (input.y < 0)
         {
-            _movementDirection.Set(0f, -step);
+            _movementDirection.Set(0f, -Constants.step);
         }
         else
         {
@@ -160,24 +168,25 @@ public class Mover : MonoBehaviour
             && _destination.y >= _endField.y
             )
         {
-            transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _destination, Constants.speed * Time.deltaTime);
         }
         else
         {
             _destination = transform.position;
+        }
         }
     }
 
     public void goBack()
     {
         _movementDirection.Set(
-            (previousPosition.x - heroPosition.x) * step,
-            (previousPosition.y - heroPosition.y) * step
+            (previousPosition.x - heroPosition.x) * Constants.step,
+            (previousPosition.y - heroPosition.y) * Constants.step
             );
 
         _destination = transform.position + (Vector3)_movementDirection;
 
-        transform.position = Vector3.MoveTowards(transform.position, _destination, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _destination, Constants.speed * Time.deltaTime);
 
         heroPosition.x = previousPosition.x;
         heroPosition.y = previousPosition.y;

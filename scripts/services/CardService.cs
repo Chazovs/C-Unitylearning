@@ -74,6 +74,9 @@ public class CardService
     {
         currentCard.isOpen = true;
         mover.setCardInField(currentCard);
+        mover.isInputBlocked = false;
+
+        hideCard();
     }
 
     private void dangerousAction()
@@ -85,6 +88,7 @@ public class CardService
     {
         hideCard();
         mover.goBack();
+        mover.isInputBlocked = false;
     }
 
     public void hideCard()
