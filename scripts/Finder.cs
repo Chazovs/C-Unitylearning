@@ -12,17 +12,6 @@ public class Finder : MonoBehaviour
     private float yField;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        _goal = GameObject.Find("EndPoint");
-        _block = GameObject.Find("block");
-
-        xField = (Math.Abs(_block.transform.position.x + Constants.step / 2) + _goal.transform.position.x) / Constants.step;
-        yField = (Math.Abs(_block.transform.position.y + Constants.step / 2) + _goal.transform.position.y) / Constants.step;
-    }
-
     // Update is called once per frame
     void Update()
     {

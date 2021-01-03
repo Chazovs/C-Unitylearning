@@ -20,6 +20,9 @@ public class GameFieldService
         gameFields = new Card[(int) Constants.fieldSize, (int) Constants.fieldSize];
     }
 
+    /*
+* <summary>Основной метод - заполняет все поля на игровом поле</summary>
+*/
     public Card[,] fillGameFields()
     {
         List<Card> safeFields = getSafeFields();
@@ -30,7 +33,10 @@ public class GameFieldService
 
         return gameFields;
     }
-
+  
+    /*
+* <summary>Получает опасные поля из БД</summary>
+*/
     private List<Card> getDangerousFields()
     {
         CardRepository repository = new CardRepository();
@@ -38,6 +44,9 @@ public class GameFieldService
         return repository.getCardsBySafety(false);
     }
 
+    /*
+* <summary>Получает безопасные поля из БД</summary>
+*/
     private List<Card> getSafeFields()
     {
         CardRepository repository = new CardRepository();
@@ -45,6 +54,10 @@ public class GameFieldService
         return repository.getCardsBySafety(true);
     }
 
+
+    /*
+ * <summary>Создает безопасные поля </summary>
+ */
     private void setSafePathVectors(List<Card> safeFields)
     {
         safeFields = Shuffler.listShuffler(safeFields);
@@ -161,6 +174,9 @@ public class GameFieldService
         }
     }
 
+    /*
+     * <summary>Создает опасные поля </summary>
+     */
     private void setDangerousFields(List<Card> dangerousFields)
     {
         dangerousFields = Shuffler.listShuffler(dangerousFields);

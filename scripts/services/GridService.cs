@@ -8,11 +8,12 @@ public class GridService : MonoBehaviour
     GameObject[,] gameGrids;
     public GameObject block;
 
-    public void CreateGrid(Transform transform)
+    /*
+     * <summary> раскидывает по полю картинки полей </summary>
+     */
+    public void createGrid(GameObject grid, GameObject block)
     {
-        block = GameObject.Find("block");
-
-        Vector3 startPosition = transform.position;
+        Vector3 startPosition = grid.transform.position;
 
         float xx = startPosition.x + (Constants.step / 2);
         float yy = startPosition.y + (Constants.step / 2);
@@ -24,12 +25,22 @@ public class GridService : MonoBehaviour
             for (int x = 0; x < Constants.gridWidth; x++)
             {
                 gameGrids[x, y] = Instantiate(block);
-                gameGrids[x, y].GetComponent<GridBlocks>().currentBlockIndex = 0;
                 gameGrids[x, y].transform.position = new Vector3(xx, yy, startPosition.z);
                 xx = xx + Constants.step;
             }
             xx = startPosition.x + (Constants.step / 2);
             yy = yy + Constants.step;
         }
+    }
+
+    public void setGoal(GameObject endPoint)
+    {
+        float randomX = Random.Range(1, 10);
+        float randomY = Random.Range(1, 10);
+        endPoint.transform.position = new Vector3(
+            (endPoint.transform.position.x + Constants.step / 2) + (Constants.step * randomX),
+            (endPoint.transform.position.y + Constants.step / 2) + (Constants.step * randomY),
+            endPoint.transform.position.z
+            );
     }
 }
