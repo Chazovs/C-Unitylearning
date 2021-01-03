@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System;
 using UnityEngine.SceneManagement;
 
 public class CardService
@@ -12,27 +10,26 @@ public class CardService
     Button goCardButtonComponent;
     Button backCardButtonComponent;
 
+    private Main mainComponent;
+    private ServiceLocator serviceLocator;
     private GameObject cardObject;
     private GameObject cardText;
     private GameObject cardImage;
     private GameObject goCardButton;
     private GameObject backCardButton;
-    private GameObject hero;
-
+    private GameObject main;
     private Texture2D cardImageFile;
-
-    Mover mover;
 
     Card currentCard;
 
-    public CardService()
+    public CardService(GameObjects gameObjects)
     {
-        cardObject = GameObject.Find("card");
-        cardText = GameObject.Find("cardText");
-        cardImage = GameObject.Find("cardImage");
-        goCardButton = GameObject.Find("goCardButton");
-        backCardButton = GameObject.Find("backCardButton");
-        hero = GameObject.Find("Hero");
+        cardObject = gameObjects.card;
+        cardText = gameObjects.cardText;
+        cardImage = gameObjects.cardImage;
+        goCardButton = gameObjects.goCardButton;
+        backCardButton = gameObjects.backCardButton;
+        main = gameObjects.main;
 
         cardObjectComponent = cardObject.GetComponent<SpriteRenderer>();
         cardTextComponent = cardText.GetComponent<Text>();
@@ -40,7 +37,8 @@ public class CardService
         goCardButtonComponent = goCardButton.GetComponent<Button>();
         backCardButtonComponent = backCardButton.GetComponent<Button>();
 
-        mover = hero.GetComponent<Mover>();
+        mainComponent = main.GetComponent<Main>();
+        serviceLocator = mainComponent.serviceLocator;
     }
 
     public void showCard(Card card)
@@ -73,8 +71,8 @@ public class CardService
     private void safetyAction()
     {
         currentCard.isOpen = true;
-        mover.setCardInField(currentCard);
-        mover.isInputBlocked = false;
+        serviceLocator.heroService.setCardInField(currentCard);
+        serviceLocator.heroService.isInputBlocked = false;
 
         hideCard();
     }
@@ -87,8 +85,8 @@ public class CardService
     private void backAction()
     {
         hideCard();
-        mover.goBack();
-        mover.isInputBlocked = false;
+        serviceLocator.heroService.goBack();
+        serviceLocator.heroService.isInputBlocked = false;
     }
 
     public void hideCard()

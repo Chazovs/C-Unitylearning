@@ -11,4 +11,7 @@ public class Constants
 
     //размер игрового поля
     public const float fieldSize = 10;
+
+    //время игры в секундах
+    internal static float totalTime = 200f;
 }

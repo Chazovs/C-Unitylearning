@@ -30,7 +30,7 @@ public class Mover : MonoBehaviour
 
     public bool isInputBlocked = false;
 
-    void Start()
+/*    void Start()
     {
         gameFields = new Card[(int) Constants.fieldSize, (int)Constants.fieldSize];
 
@@ -52,10 +52,10 @@ public class Mover : MonoBehaviour
             transform.position.z
             );
 
-        GameFieldService fieldService = new GameFieldService(heroPosition, goalPosition);
-        gameFields =  fieldService.fillGameFields();
+        GameFieldService fieldService = new GameFieldService();
+        gameFields =  fieldService.fillGameFields(heroPosition, goalPosition);
 
-/*        string myX = "";
+*//*        string myX = "";
         for (int i = 0; i < fieldSize; i++) //строки
         {
             for (int j = 0; j < fieldSize; j++)//столбцы
@@ -76,7 +76,7 @@ public class Mover : MonoBehaviour
             
         }
         Debug.Log(myX);
-        Debug.Log("goalPosition x: " + goalPosition.x + "y: " + goalPosition.y);*/
+        Debug.Log("goalPosition x: " + goalPosition.x + "y: " + goalPosition.y);*//*
 
         _startField = transform.position;
         _endField = new Vector3(
@@ -111,8 +111,6 @@ public class Mover : MonoBehaviour
 
             heroPosition.x += input.x;
             heroPosition.y += input.y;
-            Debug.Log((int)heroPosition.x - 1);
-            Debug.Log((int)heroPosition.y - 1);
            
                 Card currentCard = gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
                 if (currentCard.isOpen == false)
@@ -190,5 +188,5 @@ public class Mover : MonoBehaviour
 
         heroPosition.x = previousPosition.x;
         heroPosition.y = previousPosition.y;
-    }
+    }*/
 }

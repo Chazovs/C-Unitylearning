@@ -11,20 +11,26 @@ public class GameFieldService
     private Position goalPosition = new Position();
 
     private Card[,] gameFields;
+    private GameObjects _gameObjects;
 
-    //Конструктор класса
-    public GameFieldService(Position hero, Position goal)
+    public GameFieldService(GameObjects gameObjects)
     {
-        goalPosition = goal;
-        heroPosition = hero;
-        gameFields = new Card[(int) Constants.fieldSize, (int) Constants.fieldSize];
+        _gameObjects = gameObjects;
     }
-
+    
     /*
 * <summary>Основной метод - заполняет все поля на игровом поле</summary>
 */
     public Card[,] fillGameFields()
     {
+        goalPosition.x = (float)(Math.Abs(_gameObjects.block.transform.position.x - Constants.step * 0.5) + _gameObjects.endPoint.transform.position.x) / Constants.step;
+        goalPosition.y = (float)(Math.Abs(_gameObjects.block.transform.position.y - Constants.step * 0.5) + _gameObjects.endPoint.transform.position.y) / Constants.step;
+
+        heroPosition.x = 1;
+        heroPosition.y = Constants.fieldSize;
+
+        gameFields = new Card[(int)Constants.fieldSize, (int)Constants.fieldSize];
+
         List<Card> safeFields = getSafeFields();
         List<Card> dangerousFields = getDangerousFields();
 
