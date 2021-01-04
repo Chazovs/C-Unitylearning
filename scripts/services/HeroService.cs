@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HeroService
+public class HeroService : MonoBehaviour
 {
     private Vector2 _movementDirection;
 
@@ -34,7 +34,7 @@ public class HeroService
 
     public bool isInputBlocked = false;
 
-    public HeroService(GameObjects gameObjects)
+    public HeroService(ref GameObjects gameObjects)
     {
         _goal = gameObjects.endPoint;
         _block = gameObjects.block;

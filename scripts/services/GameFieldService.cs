@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class GameFieldService
+public class GameFieldService : MonoBehaviour
 {
     /*позиция героя */
     private Position heroPosition = new Position();
@@ -13,7 +13,7 @@ public class GameFieldService
     private Card[,] gameFields;
     private GameObjects _gameObjects;
 
-    public GameFieldService(GameObjects gameObjects)
+    public GameFieldService(ref GameObjects gameObjects)
     {
         _gameObjects = gameObjects;
     }

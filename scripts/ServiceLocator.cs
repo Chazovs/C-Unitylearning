@@ -10,12 +10,23 @@ public class ServiceLocator
     public ButtonService buttonService;
     public GameFieldService gameFieldService;
 
-    public ServiceLocator(GameObjects gameObjects)
+    public ServiceLocator(ref GameObjects gameObjects)
     {
-        cardService = new CardService(gameObjects);
+        cardService = new CardService(ref gameObjects);
+        heroService = new HeroService(ref gameObjects);
+        gridService = new GridService();
+        buttonService = new ButtonService();
+        gameFieldService = new GameFieldService(ref gameObjects);
+    }
+
+/*    static void GetDependentInstances()
+    {
+        var container = UnityConfig.Register();
+
+        cardService = container.Res;
         heroService = new HeroService(gameObjects);
         gridService = new GridService();
         buttonService = new ButtonService();
         gameFieldService = new GameFieldService(gameObjects);
-    }
+    }*/
 }

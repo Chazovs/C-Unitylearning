@@ -3,16 +3,17 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
-public class CardService
+public class CardService 
 {
     SpriteRenderer cardObjectComponent;
     Text cardTextComponent;
     RawImage cardImageComponent;
+    public GameObject goCardButton;
+    public GameObject backCardButton;
     Button goCardButtonComponent;
     Button backCardButtonComponent;
 
     private Main mainComponent;
-    private ServiceLocator serviceLocator;
     private Texture2D cardImageFile;
 
     Card currentCard;
@@ -20,18 +21,17 @@ public class CardService
 
     bool isCardShowing;
 
-    public CardService(GameObjects _gameObjects)
+    public CardService(ref GameObjects _gameObjects)
     {
         gameObjects = _gameObjects;
+
+        mainComponent = gameObjects.main.GetComponent<Main>();
 
         cardObjectComponent = gameObjects.card.GetComponent<SpriteRenderer>();
         cardTextComponent = gameObjects.cardText.GetComponent<Text>();
         cardImageComponent = gameObjects.cardImage.GetComponent<RawImage>();
         goCardButtonComponent = gameObjects.goCardButton.GetComponent<Button>();
         backCardButtonComponent = gameObjects.backCardButton.GetComponent<Button>();
-
-        mainComponent = gameObjects.main.GetComponent<Main>();
-        serviceLocator = mainComponent.serviceLocator;
     }
 
     internal void showController(Card card, Position heroPosition, Position goalPosition)
@@ -49,22 +49,24 @@ public class CardService
         if (!heroPosition.onTheWay 
             && !isCardShowing 
             && !card.isWin
+            && !card.isOpen
             && (heroPosition.x != 1 || heroPosition.y != Constants.fieldSize)
             )
         {
-            showCard(card);
+            showCard(ref card);
             isCardShowing = true;
-            serviceLocator.heroService.isInputBlocked = true;
+            mainComponent.serviceLocator.heroService.isInputBlocked = true;
         }
     }
 
-    public void showCard(Card card)
+    public void showCard(ref Card card)
     {
         currentCard = card;
 
         cardObjectComponent.enabled = true;
         cardTextComponent.enabled = true;
         cardImageComponent.enabled = true;
+
         gameObjects.goCardButton.SetActive(true);
         gameObjects.backCardButton.SetActive(true);
 
@@ -76,42 +78,46 @@ public class CardService
 
         if (card.isSafe)
         {
+            Debug.Log("1");
             goCardButtonComponent.onClick.AddListener(safetyAction);
         }
-        else { 
+        else {
+            Debug.Log("2");
             goCardButtonComponent.onClick.AddListener(dangerousAction);
         }
-
+        Debug.Log("3");
         backCardButtonComponent.onClick.AddListener(backAction);
     }
 
-    private void safetyAction()
+    public void safetyAction()
     {
+        Debug.Log("5");
+        hideCard();
         currentCard.isOpen = true;
         mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y] = currentCard;
-        serviceLocator.heroService.isInputBlocked = false;
-
-        hideCard();
+        mainComponent.serviceLocator.heroService.isInputBlocked = false;
 
         isCardShowing = false;
     }
 
-    private void dangerousAction()
+    public void dangerousAction()
     {
         SceneManager.LoadScene("End");
         isCardShowing = false;
     }
 
-    private void backAction()
+    public void backAction()
     {
+        Debug.Log("4");
         hideCard();
         isCardShowing = false;
-        serviceLocator.heroService.goBack();
-        serviceLocator.heroService.isInputBlocked = false;
+        mainComponent.serviceLocator.heroService.goBack();
+        mainComponent.serviceLocator.heroService.isInputBlocked = false;
     }
 
     public void hideCard()
     {
+        Debug.Log("6");
         cardObjectComponent.enabled = false;
         cardTextComponent.enabled = false;
         cardImageComponent.enabled = false;

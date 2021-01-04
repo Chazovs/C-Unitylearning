@@ -16,7 +16,7 @@ public class Main : MonoBehaviour
 
         GameObjects gameObjects = new GameObjects();
 
-        serviceLocator = new ServiceLocator(gameObjects);
+        serviceLocator = new ServiceLocator(ref gameObjects);
 
         timer = new Timer(gameObjects.timerBarImage);
         
