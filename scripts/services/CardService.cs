@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class CardService
 {
@@ -12,33 +13,49 @@ public class CardService
 
     private Main mainComponent;
     private ServiceLocator serviceLocator;
-    private GameObject cardObject;
-    private GameObject cardText;
-    private GameObject cardImage;
-    private GameObject goCardButton;
-    private GameObject backCardButton;
-    private GameObject main;
     private Texture2D cardImageFile;
 
     Card currentCard;
+    private GameObjects gameObjects;
 
-    public CardService(GameObjects gameObjects)
+    bool isCardShowing;
+
+    public CardService(GameObjects _gameObjects)
     {
-        cardObject = gameObjects.card;
-        cardText = gameObjects.cardText;
-        cardImage = gameObjects.cardImage;
-        goCardButton = gameObjects.goCardButton;
-        backCardButton = gameObjects.backCardButton;
-        main = gameObjects.main;
+        gameObjects = _gameObjects;
 
-        cardObjectComponent = cardObject.GetComponent<SpriteRenderer>();
-        cardTextComponent = cardText.GetComponent<Text>();
-        cardImageComponent = cardImage.GetComponent<RawImage>();
-        goCardButtonComponent = goCardButton.GetComponent<Button>();
-        backCardButtonComponent = backCardButton.GetComponent<Button>();
+        cardObjectComponent = gameObjects.card.GetComponent<SpriteRenderer>();
+        cardTextComponent = gameObjects.cardText.GetComponent<Text>();
+        cardImageComponent = gameObjects.cardImage.GetComponent<RawImage>();
+        goCardButtonComponent = gameObjects.goCardButton.GetComponent<Button>();
+        backCardButtonComponent = gameObjects.backCardButton.GetComponent<Button>();
 
-        mainComponent = main.GetComponent<Main>();
+        mainComponent = gameObjects.main.GetComponent<Main>();
         serviceLocator = mainComponent.serviceLocator;
+    }
+
+    internal void showController(Card card, Position heroPosition, Position goalPosition)
+    {
+        if (
+            heroPosition.x == goalPosition.x 
+            && heroPosition.y == goalPosition.y
+            && heroPosition.onTheWay == false
+            )
+        {
+            SceneManager.LoadScene("End");
+            return;
+        }
+
+        if (!heroPosition.onTheWay 
+            && !isCardShowing 
+            && !card.isWin
+            && (heroPosition.x != 1 || heroPosition.y != Constants.fieldSize)
+            )
+        {
+            showCard(card);
+            isCardShowing = true;
+            serviceLocator.heroService.isInputBlocked = true;
+        }
     }
 
     public void showCard(Card card)
@@ -48,8 +65,8 @@ public class CardService
         cardObjectComponent.enabled = true;
         cardTextComponent.enabled = true;
         cardImageComponent.enabled = true;
-        goCardButton.SetActive(true);
-        backCardButton.SetActive(true);
+        gameObjects.goCardButton.SetActive(true);
+        gameObjects.backCardButton.SetActive(true);
 
         cardTextComponent.text = card.text;
 
@@ -71,20 +88,24 @@ public class CardService
     private void safetyAction()
     {
         currentCard.isOpen = true;
-        serviceLocator.heroService.setCardInField(currentCard);
+        mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y] = currentCard;
         serviceLocator.heroService.isInputBlocked = false;
 
         hideCard();
+
+        isCardShowing = false;
     }
 
     private void dangerousAction()
     {
         SceneManager.LoadScene("End");
+        isCardShowing = false;
     }
 
     private void backAction()
     {
         hideCard();
+        isCardShowing = false;
         serviceLocator.heroService.goBack();
         serviceLocator.heroService.isInputBlocked = false;
     }
@@ -95,7 +116,7 @@ public class CardService
         cardTextComponent.enabled = false;
         cardImageComponent.enabled = false;
 
-        goCardButton.SetActive(false);
-        backCardButton.SetActive(false);
+        gameObjects.goCardButton.SetActive(false);
+        gameObjects.backCardButton.SetActive(false);
     }
 }

@@ -87,17 +87,18 @@ public class HeroService
 
     }
 
-    public void move()
+    public Position move()
     {
-        {
             if (!isInputBlocked)
             {
+            float inputHorizontal = Input.GetAxisRaw("Horizontal");
+            float inputVertical = Input.GetAxisRaw("Vertical");
 
-                Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+                Vector2 input = new Vector2(inputHorizontal, inputVertical);
 
                 if (
-                    (Input.GetAxisRaw("Horizontal") != _horizontVector && Input.GetAxisRaw("Horizontal") != 0)
-                    || (Input.GetAxisRaw("Vertical") != _verticalVector && Input.GetAxisRaw("Vertical") != 0)
+                    (inputHorizontal != _horizontVector && inputHorizontal != 0)
+                    || (inputVertical != _verticalVector && inputVertical != 0)
                     )
                 {
                     previousPosition.x = heroPosition.x;
@@ -106,13 +107,13 @@ public class HeroService
                     heroPosition.x += input.x;
                     heroPosition.y += input.y;
 
-                    Card currentCard = mainComponent.gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
+                /*Card currentCard = mainComponent.gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
 
-                    if (currentCard.isOpen == false)
-                    {
-                        isInputBlocked = true;
-                        serviceLocator.cardService.showCard(mainComponent.gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1]);
-                    }
+                if (currentCard.isOpen == false)
+                {
+                    isInputBlocked = true;
+                    serviceLocator.cardService.showCard(currentCard);
+                }*/
 
                     if (heroPosition.x > Constants.fieldSize) heroPosition.x = Constants.fieldSize;
                     if (heroPosition.x < 1) heroPosition.x = 1;
@@ -120,55 +121,59 @@ public class HeroService
                     if (heroPosition.y < 1) heroPosition.y = 1;
                 }
 
-                _horizontVector = Input.GetAxisRaw("Horizontal");
-                _verticalVector = Input.GetAxisRaw("Vertical");
+                _horizontVector = inputHorizontal;
+                _verticalVector = inputVertical;
 
-                if (hero.transform.position.x == _goal.transform.position.x
-                    && hero.transform.position.y == _goal.transform.position.y)
-                {
-                    SceneManager.LoadScene("End");
-                }
 
-                if (input.x > 0)
+            _movementDirection = Vector2.zero;
+
+            if (input.x > 0)
                 {
                     _movementDirection.Set(Constants.step, 0f);
                 }
-                else if (input.x < 0)
+
+            if (input.x < 0)
                 {
                     _movementDirection.Set(-Constants.step, 0f);
                 }
-                else if (input.y > 0)
+
+            if (input.y > 0)
                 {
                     _movementDirection.Set(0f, Constants.step);
                 }
-                else if (input.y < 0)
+
+            if (input.y < 0)
                 {
                     _movementDirection.Set(0f, -Constants.step);
                 }
-                else
-                {
-                    _movementDirection = Vector2.zero;
-                }
+            
 
                 if (_destination == hero.transform.position)
                 {
                     _destination = hero.transform.position + (Vector3)_movementDirection;
                 }
 
-                if (_destination.x >= _startField.x
+
+                if ((_destination.x >= _startField.x
                     && _destination.x <= _endField.x
                     && _destination.y <= _startField.y
-                    && _destination.y >= _endField.y
+                    && _destination.y >= _endField.y)
+                    && _destination != hero.transform.position
                     )
                 {
-                    hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
+
+                hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
                 }
                 else
                 {
-                    _destination = hero.transform.position;
+                _destination = hero.transform.position;
+                    heroPosition.onTheWay = false;
+                    return heroPosition;
                 }
             }
-        }
+
+        heroPosition.onTheWay = true;
+        return heroPosition;
     }
 
     public void goBack()
@@ -184,10 +189,5 @@ public class HeroService
 
         heroPosition.x = previousPosition.x;
         heroPosition.y = previousPosition.y;
-    }
-
-    internal void setCardInField(Card currentCard)
-    {
-        mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y] = currentCard;
     }
 }

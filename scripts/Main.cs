@@ -6,6 +6,7 @@ public class Main : MonoBehaviour
 {
     private Timer timer;
     public ServiceLocator serviceLocator;
+    private Position goalPosition;
     public Card[,] gameFields;
 
     // Start is called before the first frame update
@@ -22,8 +23,8 @@ public class Main : MonoBehaviour
         serviceLocator.cardService.hideCard();
 
         serviceLocator.gridService.createGrid(gameObjects.grid, gameObjects.block);
-        serviceLocator.gridService.setGoal(gameObjects.endPoint);
 
+        goalPosition = serviceLocator.gridService.setGoal(gameObjects.endPoint);
         gameFields = serviceLocator.gameFieldService.fillGameFields();
     }
 
@@ -31,6 +32,13 @@ public class Main : MonoBehaviour
     void Update()
     {
         timer.updateTimer();
-        serviceLocator.heroService.move();
+
+        Position heroPosition = serviceLocator.heroService.move();
+
+        serviceLocator.cardService.showController(
+            gameFields[(int) heroPosition.x - 1, (int) heroPosition.y - 1],
+           heroPosition,
+           goalPosition
+            );
     }
 }

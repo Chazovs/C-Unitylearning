@@ -33,14 +33,18 @@ public class GridService : MonoBehaviour
         }
     }
 
-    public void setGoal(GameObject endPoint)
+    public Position setGoal(GameObject endPoint)
     {
-        float randomX = Random.Range(1, 10);
-        float randomY = Random.Range(1, 10);
+        Position goalPosition = new Position();
+
+        goalPosition.x = Random.Range(1, 10);
+        goalPosition.y = Random.Range(1, 10);
         endPoint.transform.position = new Vector3(
-            (endPoint.transform.position.x + Constants.step / 2) + (Constants.step * randomX),
-            (endPoint.transform.position.y + Constants.step / 2) + (Constants.step * randomY),
+            (endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x),
+            (endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y),
             endPoint.transform.position.z
             );
+
+        return goalPosition;
     }
 }
