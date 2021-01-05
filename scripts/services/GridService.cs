@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GridService : MonoBehaviour
 {
@@ -40,8 +38,8 @@ public class GridService : MonoBehaviour
         goalPosition.x = Random.Range(1, 10);
         goalPosition.y = Random.Range(1, 10);
         endPoint.transform.position = new Vector3(
-            (endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x),
-            (endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y),
+            (endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x)-Constants.step,
+            (endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y)-Constants.step,
             endPoint.transform.position.z
             );
 

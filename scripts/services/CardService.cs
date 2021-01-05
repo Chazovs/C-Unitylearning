@@ -36,6 +36,12 @@ public class CardService
 
     internal void showController(Card card, Position heroPosition, Position goalPosition)
     {
+/*        Debug.Log(heroPosition.x);
+        Debug.Log(goalPosition.x);
+        Debug.Log(heroPosition.y);
+        Debug.Log(goalPosition.y);
+        Debug.Log(heroPosition.onTheWay);*/
+
         if (
             heroPosition.x == goalPosition.x 
             && heroPosition.y == goalPosition.y
@@ -78,20 +84,16 @@ public class CardService
 
         if (card.isSafe)
         {
-            Debug.Log("1");
             goCardButtonComponent.onClick.AddListener(safetyAction);
         }
         else {
-            Debug.Log("2");
             goCardButtonComponent.onClick.AddListener(dangerousAction);
         }
-        Debug.Log("3");
         backCardButtonComponent.onClick.AddListener(backAction);
     }
 
     public void safetyAction()
     {
-        Debug.Log("5");
         hideCard();
         currentCard.isOpen = true;
         mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y] = currentCard;
@@ -108,7 +110,6 @@ public class CardService
 
     public void backAction()
     {
-        Debug.Log("4");
         hideCard();
         isCardShowing = false;
         mainComponent.serviceLocator.heroService.goBack();
@@ -117,7 +118,6 @@ public class CardService
 
     public void hideCard()
     {
-        Debug.Log("6");
         cardObjectComponent.enabled = false;
         cardTextComponent.enabled = false;
         cardImageComponent.enabled = false;
