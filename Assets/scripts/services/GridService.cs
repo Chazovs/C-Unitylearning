@@ -46,8 +46,8 @@ public class GridService : MonoBehaviour
     {
         Position goalPosition = new Position();
 
-        goalPosition.x = Random.Range(1, 10);
-        goalPosition.y = Random.Range(1, 10);
+        goalPosition.x = Random.Range(4, 10);
+        goalPosition.y = Random.Range(4, 10);
         gameObjects.endPoint.transform.position = new Vector3(
             (gameObjects.endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x)-Constants.step,
             (gameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y)-Constants.step,
