@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
 
 public class CardService 
 {
@@ -19,8 +18,6 @@ public class CardService
     Card currentCard;
     private GameObjects gameObjects;
 
-    bool isCardShowing;
-
     public CardService(ref GameObjects _gameObjects)
     {
         gameObjects = _gameObjects;
@@ -34,19 +31,20 @@ public class CardService
         backCardButtonComponent = gameObjects.backCardButton.GetComponent<Button>();
     }
 
-    internal void showController(Position heroPosition)
+    internal void ShowController()
     {
-        if (
-            heroPosition.x == mainComponent.goalPosition.x
-            && heroPosition.y == mainComponent.goalPosition.y
-            && heroPosition.onTheWay == false
+        //если герой пришел к цели
+        if (mainComponent.heroPosition.x == mainComponent.goalPosition.x
+            && mainComponent.heroPosition.y == mainComponent.goalPosition.y
+            && mainComponent.heroPosition.onTheWay == false
             )
         {
             SceneManager.LoadScene("End");
+
             return;
         }
 
-        Card card = mainComponent.gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
+        Card card = mainComponent.gameFields[(int)mainComponent.heroPosition.x - 1, (int)mainComponent.heroPosition.y - 1];
 
         /*
         String qwerty =  heroPosition.onTheWay?"1":"0";
@@ -63,18 +61,18 @@ public class CardService
         }*/
 
 
-        if (heroPosition.onTheWay
-            || isCardShowing
+        if (mainComponent.heroPosition.onTheWay
+            || mainComponent.isCardShowing
             || card.isWin
             || card.isOpen
-            || heroPosition.x == 1 && heroPosition.y == Constants.fieldSize
+            || mainComponent.heroPosition.x == 1 && mainComponent.heroPosition.y == Constants.fieldSize
             )
         {
             return;
         }
 
         showCard(ref card);
-        isCardShowing = true;
+        mainComponent.isCardShowing = true;
         mainComponent.serviceLocator.heroService.isInputBlocked = true;
     }
 
@@ -116,20 +114,22 @@ public class CardService
 
         mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y].isOpen = true;
         mainComponent.serviceLocator.heroService.isInputBlocked = false;
-        isCardShowing = false;
+        mainComponent.isCardShowing = false;
     }
 
     public void dangerousAction()
     {
         SceneManager.LoadScene("End");
-        isCardShowing = false;
+        mainComponent.isCardShowing = false;
     }
 
     public void backAction()
     {
         hideCard();
-        isCardShowing = false;
+
+        mainComponent.isCardShowing = false;
         mainComponent.serviceLocator.heroService.isInputBlocked = false;
+
         mainComponent.serviceLocator.heroService.goBack();
     }
 

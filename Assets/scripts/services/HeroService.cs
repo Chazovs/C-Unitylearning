@@ -1,49 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class HeroService : MonoBehaviour
 {
     private Vector2 _movementDirection;
 
-    private Vector3 _destination;
+    private Vector3 _destination = new Vector3();
     private Vector3 _startField;
     private Vector3 _endField;
 
-    private Card[,] gameFields;
-    private Main mainComponent;
-    private ServiceLocator serviceLocator;
-
-    /*позиция героя */
-    private Position heroPosition = new Position();
-
-    /*позиция цели */
-    private Position goalPosition = new Position();
-
-    private GameObject _goal;
-    private GameObject _block;
     private GameObject hero;
-    private GameObject main;
     private float _horizontVector = 0;
     private float _verticalVector = 0;
-
-    Position previousPosition = new Position();
+    private Main mainComponent;
+    private KeyInput keyInput = new KeyInput();
 
     public bool isInputBlocked = false;
+    Vector3 nullPosition;
 
     public HeroService(ref GameObjects gameObjects)
     {
-        _goal = gameObjects.endPoint;
-        _block = gameObjects.block;
         hero = gameObjects.hero;
-        main = gameObjects.main;
-
-        mainComponent = main.GetComponent<Main>();
-        serviceLocator = mainComponent.serviceLocator;
-
-        heroPosition.x = previousPosition.x = 1;
-        heroPosition.y = previousPosition.y = Constants.fieldSize;
+        mainComponent = gameObjects.main.GetComponent<Main>();
 
         hero.transform.position = new Vector3(
             hero.transform.position.x + (Constants.step / 2),
@@ -52,6 +29,7 @@ public class HeroService : MonoBehaviour
             );
 
         _startField = hero.transform.position;
+        nullPosition = new Vector3() { x = Constants.fieldSize / 2 * Constants.step, y = Constants.fieldSize / 2 * Constants.step };
         _endField = new Vector3(
             _startField.x + Constants.step * (Constants.fieldSize - 1),
             _startField.y - Constants.step * (Constants.fieldSize - 1),
@@ -59,96 +37,67 @@ public class HeroService : MonoBehaviour
             );
 
         _destination = hero.transform.position;
-
     }
 
-    public Position move()
+
+    public void Move()
     {
-            if (!isInputBlocked)
+        mainComponent.serviceLocator.cardService.ShowController();
+
+        if (mainComponent.isCardShowing) return;
+
+        keyInput.x = keyInput.y = 0;
+
+        //если герой не движется, то можно принимать значение ввода
+        if (!mainComponent.heroPosition.onTheWay) {
+            keyInput.x = Input.GetAxisRaw("Horizontal");
+            keyInput.y = Input.GetAxisRaw("Vertical");
+        };
+
+        if(keyInput.x != 0 || keyInput.y != 0)
+        {
+            mainComponent.heroPosition.onTheWay = true;
+
+            mainComponent.newPosition = new Position
             {
-            float inputHorizontal = Input.GetAxisRaw("Horizontal");
-            float inputVertical = Input.GetAxisRaw("Vertical");
+                x = mainComponent.heroPosition.x + keyInput.x,
+                y = mainComponent.heroPosition.y + keyInput.y
+            };
 
-                Vector2 input = new Vector2(inputHorizontal, inputVertical);
+            bool canMove = mainComponent.newPosition.x > 0
+            && mainComponent.newPosition.x < 11
+            && mainComponent.newPosition.y > 0
+            && mainComponent.newPosition.y < 11;
 
-                if (
-                    (inputHorizontal != _horizontVector && inputHorizontal != 0)
-                    || (inputVertical != _verticalVector && inputVertical != 0)
-                    )
-                {
-                    previousPosition.x = heroPosition.x;
-                    previousPosition.y = heroPosition.y;
-
-                    heroPosition.x += input.x;
-                    heroPosition.y += input.y;
-
-                /*Card currentCard = mainComponent.gameFields[(int)heroPosition.x - 1, (int)heroPosition.y - 1];
-
-                if (currentCard.isOpen == false)
-                {
-                    isInputBlocked = true;
-                    serviceLocator.cardService.showCard(currentCard);
-                }*/
-
-                    if (heroPosition.x > Constants.fieldSize) heroPosition.x = Constants.fieldSize;
-                    if (heroPosition.x < 1) heroPosition.x = 1;
-                    if (heroPosition.y > Constants.fieldSize) heroPosition.y = Constants.fieldSize;
-                    if (heroPosition.y < 1) heroPosition.y = 1;
-                }
-
-                _horizontVector = inputHorizontal;
-                _verticalVector = inputVertical;
-
+            if (!canMove) {
+                mainComponent.heroPosition.onTheWay = false;
+                return;
+            }
 
             _movementDirection = Vector2.zero;
 
-            if (input.x > 0)
-                {
-                    _movementDirection.Set(Constants.step, 0f);
-                }
+            _movementDirection.Set(keyInput.x * Constants.step, keyInput.y * Constants.step);
 
-            if (input.x < 0)
-                {
-                    _movementDirection.Set(-Constants.step, 0f);
-                }
+            _destination = hero.transform.position + (Vector3)_movementDirection;
+        }
 
-            if (input.y > 0)
-                {
-                    _movementDirection.Set(0f, Constants.step);
-                }
+        //если туда можно двигаться и если мы еще не там - идем туда
+        if (_destination != hero.transform.position) {
+            mainComponent.heroPosition.onTheWay = true;
+            hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
 
-            if (input.y < 0)
-                {
-                    _movementDirection.Set(0f, -Constants.step);
-                }
-            
+            return;
+        }
 
-                if (_destination == hero.transform.position)
-                {
-                    _destination = hero.transform.position + (Vector3)_movementDirection;
-                }
+        //если мы пришли
+        if (mainComponent.heroPosition.onTheWay && hero.transform.position == _destination)
+        {
+            mainComponent.previousPosition = mainComponent.heroPosition;
+            mainComponent.heroPosition = mainComponent.newPosition;
+            mainComponent.heroPosition.onTheWay = false;
 
-
-                if ((_destination.x >= _startField.x
-                    && _destination.x <= _endField.x
-                    && _destination.y <= _startField.y
-                    && _destination.y >= _endField.y)
-                    && _destination != hero.transform.position
-                    )
-                {
-
-                hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
-                }
-                else
-                {
-                _destination = hero.transform.position;
-                    heroPosition.onTheWay = false;
-                    return heroPosition;
-                }
-            }
-
-        heroPosition.onTheWay = true;
-        return heroPosition;
+            return;
+        }
     }
 
     public void goBack()
@@ -159,36 +108,34 @@ public class HeroService : MonoBehaviour
                 Debug.Log(heroPosition.x);
                 Debug.Log(heroPosition.y);*/
 
-     /*   if (_destination == hero.transform.position)
-        {*/
+        if (_destination == hero.transform.position)
+        {
 
             _movementDirection.Set(
-            (previousPosition.x - heroPosition.x) * Constants.step,
-            (previousPosition.y - heroPosition.y) * Constants.step
+            (mainComponent.previousPosition.x - mainComponent.heroPosition.x) * Constants.step,
+            (mainComponent.previousPosition.y - mainComponent.heroPosition.y) * Constants.step
             );
 
         _destination = hero.transform.position + (Vector3)_movementDirection;
 
         hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
-
-
         
             _movementDirection.Set(
-            (previousPosition.x - heroPosition.x) * Constants.step,
-            (previousPosition.y - heroPosition.y) * Constants.step
+            (mainComponent.previousPosition.x - mainComponent.heroPosition.x) * Constants.step,
+            (mainComponent.previousPosition.y - mainComponent.heroPosition.y) * Constants.step
             );
 
             _destination = hero.transform.position + (Vector3)_movementDirection;
 
             hero.transform.position = Vector3.MoveTowards(hero.transform.position, _destination, Constants.speed * Time.deltaTime);
-            
-           /* heroPosition.onTheWay = false;*/
-            heroPosition.x = previousPosition.x;
-            heroPosition.y = previousPosition.y;
-       /* }
+
+            mainComponent.heroPosition.onTheWay = false;
+            mainComponent.heroPosition.x = mainComponent.previousPosition.x;
+            mainComponent.heroPosition.y = mainComponent.previousPosition.y;
+    }
         else
         {
-            heroPosition.onTheWay = true;
-        }*/
+            mainComponent.heroPosition.onTheWay = true;
+        }
     }
 }

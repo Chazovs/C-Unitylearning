@@ -17,4 +17,7 @@ public class Constants
     
     //позиция по Z открытого поля
     internal static float openedFieldZ = -3;
+
+    //стартовая позиция героя
+    internal static Position startPosition = new Position(){ x = 1, y = 10 };
 }

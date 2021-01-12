@@ -7,6 +7,12 @@ public class Main : MonoBehaviour
     public Card[,] gameFields = new Card[(int)Constants.fieldSize, (int)Constants.fieldSize];
     public GameObjects gameObjects;
 
+    public bool isCardShowing = false;
+
+    public Position heroPosition = Constants.startPosition;
+    public Position newPosition = new Position();
+    public Position previousPosition = new Position();
+
     private Timer timer;
 
     // Start is called before the first frame update
@@ -29,9 +35,6 @@ public class Main : MonoBehaviour
     void Update()
     {
         timer.updateTimer();
-
-        Position heroPosition = serviceLocator.heroService.move();
-
-        serviceLocator.cardService.showController(heroPosition);
+        serviceLocator.heroService.Move();
     }
 }
