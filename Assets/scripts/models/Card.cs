@@ -34,4 +34,5 @@
     * позиция на карте
     */
     public Position position;
+    internal bool isStart;
 }

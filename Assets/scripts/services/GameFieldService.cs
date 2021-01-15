@@ -4,37 +4,133 @@ using UnityEngine;
 
 public class GameFieldService : MonoBehaviour
 {
-    /*позиция героя */
-    private Position heroPosition = new Position();
-
-    /*позиция цели */
-    private Position goalPosition = new Position();
     private Main mainComponent;
     private GameObjects _gameObjects;
+    private int safeFieldsIndex;
+    private int dangerousFieldsIndex;
 
     public GameFieldService(ref GameObjects gameObjects)
     {
         _gameObjects = gameObjects;
+        mainComponent = _gameObjects.main.GetComponent<Main>();
     }
     
     /*
-* <summary>Основной метод - заполняет все поля на игровом поле</summary>
-*/
+    * <summary>Основной метод - заполняет все поля на игровом поле</summary>
+    */
     public void fillGameFields()
     {
-        goalPosition.x = (float)(Math.Abs(_gameObjects.block.transform.position.x - (Constants.step * 0.5)) + _gameObjects.endPoint.transform.position.x) / Constants.step;
-        goalPosition.y = (float)(Math.Abs(_gameObjects.block.transform.position.y - (Constants.step * 0.5)) + _gameObjects.endPoint.transform.position.y) / Constants.step;
-
-        heroPosition.x = 1;
-        heroPosition.y = Constants.fieldSize;
-
-        mainComponent = _gameObjects.main.GetComponent<Main>();
-
         List<Card> safeFields = getSafeFields();
         List<Card> dangerousFields = getDangerousFields();
 
-        setSafePathVectors(safeFields);
+        setGoalAndStartFields();
         setDangerousFields(dangerousFields);
+        SetSafetyCardsInField(safeFields);
+    }
+
+    private void setGoalAndStartFields()
+    {
+        Card goal = new Card() { isWin = true, position = mainComponent.goalPosition };
+        mainComponent.gameFields[(int)mainComponent.goalPosition.x-1, (int)mainComponent.goalPosition.y-1] = goal;
+
+        Card start = new Card() { isStart = true, position = mainComponent.heroPosition };
+        mainComponent.gameFields[(int)mainComponent.heroPosition.x-1, (int)mainComponent.heroPosition.y-1] = start;
+    }
+
+    public void SetSafetyCardsInField(List<Card> safeCards)
+    {
+        safeFieldsIndex = 0;
+
+        System.Random rnd = new System.Random(DateTime.Now.Millisecond);
+
+        Stack<Card> way = new Stack<Card>();
+
+        Card current = mainComponent.gameFields[(int)mainComponent.goalPosition.x - 1, (int) mainComponent.goalPosition.y - 1];
+
+        way.Push(current);
+
+        do {
+            List<Card> availableCards = GetAvailableCards(current);
+
+            if (availableCards.Count == 0) 
+            {
+                current = way.Pop();
+                continue;
+             }
+           
+            int rndIndex = rnd.Next(0, availableCards.Count);
+
+            Card directionCard = availableCards[rndIndex];
+
+            if(directionCard.position.x == Constants.startPosition.x && directionCard.position.y == Constants.startPosition.y)
+            {
+                break;
+            }
+
+            mainComponent.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1] = safeCards[safeFieldsIndex];
+            mainComponent.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1].position = directionCard.position;
+            
+            safeFieldsIndex++;
+
+            current = mainComponent.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1];
+            way.Push(current);
+
+        } while (way.Count > 0);
+    }
+
+    private List<Card> GetAvailableCards(Card current)
+    {
+        List<Card> availableCards = new List<Card>();
+
+        List<Card> surroundingCards = new List<Card> { 
+            GetCard(Constants.leftPosition, current.position),
+            GetCard(Constants.rightPosition, current.position),
+            GetCard(Constants.upPosition, current.position),
+            GetCard(Constants.downPosition, current.position)
+        };
+
+        foreach(Card surroundingCard in surroundingCards)
+        {
+            if (surroundingCard != null && surroundingCard.isSafe == false)
+            {
+                bool isСontact = IssetContactCard(surroundingCard.position, current.position);
+
+                if (!isСontact) availableCards.Add(surroundingCard);
+            }
+        }
+
+        return availableCards;
+    }
+
+    //если касается то true
+    private bool IssetContactCard(Position surrounding, Position current)
+    {
+        foreach(Position check in Constants.adjacentPositions)
+        {
+            float x = surrounding.x + check.x;
+            float y = surrounding.y + check.y;
+
+            if ((current.x == x && current.y == y) || x > 10 || x < 1 || y >10 || y < 1) continue;
+
+            Card checkingCard = mainComponent.gameFields[(int)x - 1, (int)y - 1];
+
+            if (checkingCard.isStart || checkingCard.isWin || checkingCard.isSafe) return true;
+        }
+
+        return false;
+    }
+
+    private Card GetCard(Position distanse, Position current)
+    {
+        if (current.x + distanse.x > 0
+            && current.x + distanse.x < 11
+            && current.y + distanse.y < 11
+            && current.y + distanse.y > 0
+            ) {
+            return mainComponent.gameFields[(int)current.x + (int)distanse.x - 1, (int) current.y + (int)distanse.y - 1];
+        }
+
+        return null;
     }
 
     public void setOpenField(Position openedField)
@@ -48,8 +144,8 @@ public class GameFieldService : MonoBehaviour
     }
   
     /*
-* <summary>Получает опасные поля из БД</summary>
-*/
+    * <summary>Получает опасные поля из БД</summary>
+    */
     private List<Card> getDangerousFields()
     {
         CardRepository repository = new CardRepository();
@@ -58,8 +154,8 @@ public class GameFieldService : MonoBehaviour
     }
 
     /*
-* <summary>Получает безопасные поля из БД</summary>
-*/
+    * <summary>Получает безопасные поля из БД</summary>
+    */
     private List<Card> getSafeFields()
     {
         CardRepository repository = new CardRepository();
@@ -67,123 +163,8 @@ public class GameFieldService : MonoBehaviour
         return repository.getCardsBySafety(true);
     }
 
-
     /*
- * <summary>Создает безопасные поля </summary>
- */
-    private void setSafePathVectors(List<Card> safeFields)
-    {
-        safeFields = Shuffler.listShuffler(safeFields);
-
-        Position cursor = new Position
-        {
-            x = heroPosition.x,
-            y = heroPosition.y
-        };
-
-        System.Random rnd = new System.Random(DateTime.Now.Millisecond);
-
-        int directionKey;
-        int safeFieldsIndex = 0;
-
-        while (cursor.x != goalPosition.x
-            || cursor.y != goalPosition.y)
-        {
-            //вычисляем расстояние до края поля в каждом направлении
-            float upDistance = 10 - cursor.y;
-            float downDistance = cursor.y - 1;
-            float rightDistance = 10 - cursor.x;
-            float leftDistance = cursor.x - 1;
-
-            float[] distanceArr = { upDistance, downDistance, rightDistance, leftDistance };
-
-            //ишем подходящее направление пока не найдем
-            while (true)
-            {
-                directionKey = rnd.Next(0, 4);
-
-                if (distanceArr[directionKey] > 0)
-                {
-                    break;
-                }
-            }
-
-            //решаем, как далеко мы пойдем в этом направлении
-            int distance = rnd.Next(0, (int)distanceArr[directionKey] + 1);
-
-            Position endPoint = new Position();
-
-            switch (directionKey)
-            {
-                case 0:
-                    endPoint.x = cursor.x;
-                    endPoint.y = cursor.y + distance;
-                    break;
-                case 1:
-                    endPoint.x = cursor.x;
-                    endPoint.y = cursor.y - distance;
-                    break;
-                case 2:
-                    endPoint.x = cursor.x + distance;
-                    endPoint.y = cursor.y;
-                    break;
-                case 3:
-                    endPoint.x = cursor.x - distance;
-                    endPoint.y = cursor.y;
-                    break;
-            }
-
-            //идем в этом направлении пока не придем
-            while (cursor.x != endPoint.x || cursor.y != endPoint.y)
-            {
-                switch (directionKey)
-                {
-                    //вверх
-                    case 0:
-                        cursor.y++;
-                        break;
-                    //вниз
-                    case 1:
-                        cursor.y--;
-                        break;
-                    //вправо
-                    case 2:
-                        cursor.x++;
-                        break;
-                    //влево
-                    case 3:
-                        cursor.x--;
-                        break;
-                }
-
-                if (
-                    (cursor.x != heroPosition.x || cursor.y != heroPosition.y)
-                    && mainComponent.gameFields[(int)cursor.x - 1, (int)cursor.y - 1] == null
-                    )
-                {
-                    Position arrayPosition = new Position();
-                    arrayPosition.x = cursor.x - 1;
-                    arrayPosition.y = cursor.y - 1;
-
-                    safeFields[safeFieldsIndex].position = arrayPosition;
-
-                    mainComponent.gameFields[(int)arrayPosition.x, (int)arrayPosition.y] = safeFields[safeFieldsIndex];
-                    
-                    safeFieldsIndex++;
-
-                    safeFieldsIndex = safeFieldsIndex > safeFields.Count - 1 ? 0 : safeFieldsIndex;
-                }
-            }
-
-            if ((cursor.x == goalPosition.x && cursor.y == goalPosition.y))
-            {
-                break;
-            }
-        }
-    }
-
-    /*
-     * <summary>Создает опасные поля </summary>
+     * <summary>Создает опасные поля? пропуская начало и конец </summary>
      */
     private void setDangerousFields(List<Card> dangerousFields)
     {
@@ -197,7 +178,13 @@ public class GameFieldService : MonoBehaviour
             {
                 if (mainComponent.gameFields[i, j] == null)
                 {
+                    if (mainComponent.gameFields[i, j] != null 
+                        && (mainComponent.gameFields[i, j].isWin 
+                        || mainComponent.gameFields[i, j].isStart)) continue;
+
                     mainComponent.gameFields[i, j] = dangerousFields[dangerousFieldsIndex];
+
+                    mainComponent.gameFields[i, j].position = new Position() { x = i + 1, y = j + 1 };
 
                     dangerousFieldsIndex++;
 
