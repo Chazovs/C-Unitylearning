@@ -18,7 +18,7 @@ public class GameFieldService : MonoBehaviour
     /*
     * <summary>Основной метод - заполняет все поля на игровом поле</summary>
     */
-    public void fillGameFields()
+    public void FillGameFields()
     {
         List<Card> safeFields = getSafeFields();
         List<Card> dangerousFields = getDangerousFields();
@@ -59,7 +59,6 @@ public class GameFieldService : MonoBehaviour
              }
            
             int rndIndex = rnd.Next(0, availableCards.Count);
-
             Card directionCard = availableCards[rndIndex];
 
             if(directionCard.position.x == Constants.startPosition.x && directionCard.position.y == Constants.startPosition.y)
@@ -73,6 +72,7 @@ public class GameFieldService : MonoBehaviour
             safeFieldsIndex++;
 
             current = mainComponent.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1];
+
             way.Push(current);
 
         } while (way.Count > 0);
@@ -114,7 +114,7 @@ public class GameFieldService : MonoBehaviour
 
             Card checkingCard = mainComponent.gameFields[(int)x - 1, (int)y - 1];
 
-            if (checkingCard.isStart || checkingCard.isWin || checkingCard.isSafe) return true;
+            if (checkingCard.isWin || checkingCard.isSafe) return true;
         }
 
         return false;
@@ -137,8 +137,8 @@ public class GameFieldService : MonoBehaviour
     {
          GameObject instance = Instantiate(_gameObjects.openField);
          instance.transform.position = new Vector3(
-            instance.transform.position.x + (Constants.step / 2) + (Constants.step * openedField.x ),
-            instance.transform.position.y + (Constants.step / 2) + (Constants.step * openedField.y),
+            instance.transform.position.x + (Constants.step / 2) + (Constants.step * openedField.x ) - Constants.step,
+            instance.transform.position.y + (Constants.step / 2) + (Constants.step * openedField.y) - Constants.step,
             Constants.openedFieldZ
             );
     }

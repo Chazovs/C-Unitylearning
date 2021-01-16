@@ -25,7 +25,7 @@ public class Main : MonoBehaviour
         serviceLocator.cardService.hideCard();
         serviceLocator.gridService.createGrid();
         serviceLocator.gridService.setGoal();
-        serviceLocator.gameFieldService.fillGameFields();
+        serviceLocator.gameFieldService.FillGameFields();
 
         //рантайм тесты
         FieldTest.showField(); //показать все поле с координатами и карточками

@@ -46,21 +46,6 @@ public class CardService
 
         Card card = mainComponent.gameFields[(int)mainComponent.heroPosition.x - 1, (int)mainComponent.heroPosition.y - 1];
 
-        /*
-        String qwerty =  heroPosition.onTheWay?"1":"0";
-        String qwerty0 = isCardShowing ? "1":"0";
-        String qwerty1 = card.isWin ? "1":"0";
-        String qwerty2 = card.isOpen ? "1":"0";
-        String qwerty3 =  (heroPosition.x == 1 && heroPosition.y == Constants.fieldSize) ?"1":"0";
-        String result = qwerty + qwerty0 + qwerty1 + qwerty2 + qwerty3;
-        if(oldresult != result)
-        {
-            oldresult = result;
-            Debug.Log(result);
-            Debug.Log(card.id);
-        }*/
-
-
         if (mainComponent.heroPosition.onTheWay
             || mainComponent.isCardShowing
             || card.isWin
@@ -112,7 +97,7 @@ public class CardService
         hideCard();
         mainComponent.serviceLocator.gameFieldService.setOpenField(currentCard.position);
 
-        mainComponent.gameFields[(int)currentCard.position.x, (int)currentCard.position.y].isOpen = true;
+        mainComponent.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
         mainComponent.serviceLocator.heroService.isInputBlocked = false;
         mainComponent.isCardShowing = false;
     }
