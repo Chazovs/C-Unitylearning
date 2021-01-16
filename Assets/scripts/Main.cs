@@ -23,7 +23,6 @@ public class Main : MonoBehaviour
         timer = new Timer(gameObjects.timerBarImage);
         
         serviceLocator.cardService.hideCard();
-        serviceLocator.gridService.createGrid();
         serviceLocator.gridService.setGoal();
         serviceLocator.gameFieldService.FillGameFields();
 

@@ -2,7 +2,6 @@
 
 public class GameObjects : MonoBehaviour
 {
-    public GameObject block;
     public GameObject grid;
     public GameObject endPoint;
     public GameObject timerBarImage;
@@ -17,7 +16,6 @@ public class GameObjects : MonoBehaviour
 
     public GameObjects()
     {
-        block = GameObject.Find("block");
         grid = GameObject.Find("grid");
         endPoint = GameObject.Find("EndPoint");
         timerBarImage = GameObject.Find("colorLine");
