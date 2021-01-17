@@ -35,4 +35,8 @@ public class Constants
     internal static Position rightPosition = new Position { x = 1, y = 0 };
     internal static Position upPosition = new Position { x = 0, y = 1 };
     internal static Position downPosition = new Position { x = 0, y = -1 };
+
+    //последний  слайд с правилами
+    internal static int lastRulesSlide = 6;
+    internal static int lastHistorySlide = 6;
 }

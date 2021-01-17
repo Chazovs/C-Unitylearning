@@ -34,5 +34,9 @@
     * позиция на карте
     */
     public Position position;
+
+    /**
+     * является ли стартовым полем
+     */
     internal bool isStart;
 }
