@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class Constants 
 {
+    //версия игры
+    internal static string gameVersion = "100";
+
     //шаг сетки
     public const float step = 16;
 
@@ -38,5 +41,8 @@ public class Constants
 
     //последний  слайд с правилами
     internal static int lastRulesSlide = 6;
+    //последний  слайд с историей
     internal static int lastHistorySlide = 6;
+
+    internal static string magicBookUrl = "http://g4v.ru/magic_book.pdf";
 }

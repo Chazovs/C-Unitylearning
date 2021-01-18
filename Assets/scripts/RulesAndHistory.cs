@@ -11,17 +11,35 @@ public class RulesAndHistory : MonoBehaviour
     void Start()
     {
         rulesAndHistoryObjects = new RulesAndHistoryObjects();
+
+        rulesAndHistoryObjects.magicBookUrl.SetActive(false);
+        rulesAndHistoryObjects.inputVersion.SetActive(false);
+        rulesAndHistoryObjects.checkVersionButton.SetActive(false);
+        rulesAndHistoryObjects.magicBookTitle.SetActive(false);
+        rulesAndHistoryObjects.versionNumberText.SetActive(false);
+
+
         buttonService = new ButtonService();
 
         rulesAndHistoryObjects.leftButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisLeftButtonHandler(topic, currentSlide, rulesAndHistoryObjects.rulHisImage));
+            .onClick.AddListener(() => buttonService.rulHisLeftButtonHandler(topic,
+            currentSlide,
+            rulesAndHistoryObjects.rulHisImage,
+            ref rulesAndHistoryObjects.magicBookUrl)
+            );
         rulesAndHistoryObjects.rightButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisRightButtonHandler(topic, currentSlide, rulesAndHistoryObjects.rulHisImage));
+            .onClick.AddListener(() => buttonService.rulHisRightButtonHandler(topic,
+            currentSlide,
+            rulesAndHistoryObjects.rulHisImage,
+            ref rulesAndHistoryObjects.magicBookUrl)
+            );
         rulesAndHistoryObjects.rulesButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler());
         rulesAndHistoryObjects.historyButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler());
         rulesAndHistoryObjects.skipButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler());
+            .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler(ref rulesAndHistoryObjects));
+        rulesAndHistoryObjects.magicBookUrl.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.openMagicBookUrl());
     }
 }

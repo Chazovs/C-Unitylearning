@@ -10,12 +10,20 @@ public class ButtonService : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    internal void rulHisLeftButtonHandler(string topic, int currentSlide, GameObject img)
+    internal void rulHisLeftButtonHandler(string topic, int currentSlide, GameObject img, ref GameObject gameURL)
     {
         int nextSlide = currentSlide -1;
 
         if (topic == "rules") {
             nextSlide = nextSlide == 0 ? Constants.lastRulesSlide : nextSlide;
+            if (nextSlide == 6)
+            {
+                gameURL.SetActive(true);
+            }
+            else
+            {
+                gameURL.SetActive(false);
+            }
         }
         
         if(topic == "history") {
@@ -25,13 +33,21 @@ public class ButtonService : MonoBehaviour
         img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
     }
 
-    internal void rulHisRightButtonHandler(string topic, int currentSlide, GameObject img)
+    internal void rulHisRightButtonHandler(string topic, int currentSlide, GameObject img, ref GameObject gameURL)
     {
         int nextSlide = currentSlide + 1;
 
         if (topic == "rules")
         {
             nextSlide = nextSlide > Constants.lastRulesSlide ? 1 : nextSlide;
+            if (nextSlide == 6)
+            {
+                gameURL.SetActive(true);
+            }
+            else
+            {
+                gameURL.SetActive(false);
+            }
         }
 
         if (topic == "history")
@@ -40,6 +56,11 @@ public class ButtonService : MonoBehaviour
         }
         GameObject.Find("Main Camera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
         img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" + topic + "/" + nextSlide.ToString());
+    }
+
+    internal void openMagicBookUrl()
+    {
+        Application.OpenURL(Constants.magicBookUrl);
     }
 
     internal void rulHisRulesButtonHandler()
@@ -52,9 +73,19 @@ public class ButtonService : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    internal void rulHisSkipButtonHandler()
+    internal void rulHisSkipButtonHandler(ref RulesAndHistoryObjects rulesAndHistoryObjects)
     {
-        Debug.Log("я здесь");
-        SceneManager.LoadScene("Main_Menu");
+        rulesAndHistoryObjects.leftButton.SetActive(false);
+        rulesAndHistoryObjects.rightButton.SetActive(false);
+        rulesAndHistoryObjects.rulesButton.SetActive(false);
+        rulesAndHistoryObjects.historyButton.SetActive(false);
+        rulesAndHistoryObjects.skipButton.SetActive(false);
+        rulesAndHistoryObjects.magicBookUrl.SetActive(true);
+        rulesAndHistoryObjects.rulHisImage.GetComponent<Image>().enabled = false;
+        
+        rulesAndHistoryObjects.checkVersionButton.SetActive(true);
+        rulesAndHistoryObjects.magicBookTitle.SetActive(true);
+        rulesAndHistoryObjects.versionNumberText.SetActive(true);
+        rulesAndHistoryObjects.inputVersion.SetActive(true);
     }
 }
