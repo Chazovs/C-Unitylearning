@@ -34,9 +34,9 @@ public class RulesAndHistory : MonoBehaviour
             ref rulesAndHistoryObjects.magicBookUrl)
             );
         rulesAndHistoryObjects.rulesButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler());
+            .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler(ref rulesAndHistoryObjects.rulHisImage));
         rulesAndHistoryObjects.historyButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler());
+            .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler(ref rulesAndHistoryObjects.rulHisImage));
         rulesAndHistoryObjects.skipButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler(ref rulesAndHistoryObjects));
         rulesAndHistoryObjects.magicBookUrl.GetComponent<Button>()

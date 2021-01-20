@@ -63,14 +63,20 @@ public class ButtonService : MonoBehaviour
         Application.OpenURL(Constants.magicBookUrl);
     }
 
-    internal void rulHisRulesButtonHandler()
+    internal void rulHisRulesButtonHandler(ref GameObject img)
     {
-        throw new NotImplementedException();
+        RulesAndHistory component = GameObject.Find("Main Camera").GetComponent<RulesAndHistory>();
+        component.currentSlide = 1;
+        component.topic = "rules";
+        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/rules/1");
     }
 
-    internal void rulHisHistoryButtonHandler()
+    internal void rulHisHistoryButtonHandler(ref GameObject img)
     {
-        throw new NotImplementedException();
+        RulesAndHistory component = GameObject.Find("Main Camera").GetComponent<RulesAndHistory>();
+        component.currentSlide = 1;
+        component.topic = "history";
+        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/history/1");
     }
 
     internal void rulHisSkipButtonHandler(ref RulesAndHistoryObjects rulesAndHistoryObjects)
