@@ -60,7 +60,7 @@ public class ButtonService : MonoBehaviour
 
     internal void openMagicBookUrl()
     {
-        Application.OpenURL(Constants.magicBookUrl);
+        Application.OpenURL(Constants.serverUrl);
     }
 
     internal void rulHisRulesButtonHandler(ref GameObject img)
@@ -71,6 +71,12 @@ public class ButtonService : MonoBehaviour
         img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/rules/1");
     }
 
+    internal void myBooksBtnHandler(ref GameObject myBooks, ref GameObject newBooks)
+    {
+        myBooks.SetActive(true);
+        newBooks.SetActive(false);
+    }
+
     internal void rulHisHistoryButtonHandler(ref GameObject img)
     {
         RulesAndHistory component = GameObject.Find("Main Camera").GetComponent<RulesAndHistory>();
@@ -79,19 +85,16 @@ public class ButtonService : MonoBehaviour
         img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/history/1");
     }
 
+    internal void newBooksBtnHandler(ref GameObject myBooks, ref GameObject newBooks)
+    {
+        myBooks.SetActive(false);
+        newBooks.SetActive(true);
+    }
+
     internal void rulHisSkipButtonHandler(ref RulesAndHistoryObjects rulesAndHistoryObjects)
     {
-        rulesAndHistoryObjects.leftButton.SetActive(false);
-        rulesAndHistoryObjects.rightButton.SetActive(false);
-        rulesAndHistoryObjects.rulesButton.SetActive(false);
-        rulesAndHistoryObjects.historyButton.SetActive(false);
-        rulesAndHistoryObjects.skipButton.SetActive(false);
-        rulesAndHistoryObjects.magicBookUrl.SetActive(true);
-        rulesAndHistoryObjects.rulHisImage.GetComponent<Image>().enabled = false;
-        
-        rulesAndHistoryObjects.checkVersionButton.SetActive(true);
-        rulesAndHistoryObjects.magicBookTitle.SetActive(true);
-        rulesAndHistoryObjects.versionNumberText.SetActive(true);
-        rulesAndHistoryObjects.inputVersion.SetActive(true);
+        rulesAndHistoryObjects.mainCanva.SetActive(false);
+        rulesAndHistoryObjects.startMenu.SetActive(true);
+        rulesAndHistoryObjects.myBooks.SetActive(true);
     }
 }

@@ -40,9 +40,13 @@ public class Constants
     internal static Position downPosition = new Position { x = 0, y = -1 };
 
     //последний  слайд с правилами
-    internal static int lastRulesSlide = 6;
+    internal static int lastRulesSlide = 5;
     //последний  слайд с историей
     internal static int lastHistorySlide = 6;
 
-    internal static string magicBookUrl = "http://g4v.ru/magic_book.pdf";
+    internal static string serverUrl = "http://g4v.ru/";
+
+    internal static Book defaultBook = new Book() { name = "Новый дом",
+        qrCode = "", uri="new_home"
+    };
 }
