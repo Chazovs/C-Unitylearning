@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class BooksRepository : AbstactRepository
 {
 
-    public List<Book> getAvilableBooks()
+    public List<Book> GetAvilableBooks()
     {
         List<Book> books = new List<Book>();
 
@@ -12,5 +12,4 @@ public class BooksRepository : AbstactRepository
 
         return books;
     }
-    
 }

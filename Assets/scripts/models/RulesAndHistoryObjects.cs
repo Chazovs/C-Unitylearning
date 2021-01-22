@@ -15,6 +15,8 @@ class RulesAndHistoryObjects
     public GameObject versionNumberText;
     public GameObject myBooksBtn;
     public GameObject newBooksBtn;
+    public GameObject myDropdown;
+    public GameObject qrCodeImage;
 
     public GameObject mainCanva;
     public GameObject startMenu;
@@ -36,6 +38,8 @@ class RulesAndHistoryObjects
         versionNumberText = GameObject.Find("versionNumberText");
         newBooksBtn = GameObject.Find("newBooksBtn");
         myBooksBtn = GameObject.Find("myBooksBtn");
+        myDropdown = GameObject.Find("myDropdown");
+        qrCodeImage = GameObject.Find("qrCodeImage");
 
         mainCanva = GameObject.Find("mainCanva");
         startMenu = GameObject.Find("startMenu");

@@ -12,6 +12,10 @@ public class RulesAndHistory : MonoBehaviour
     {
         rulesAndHistoryObjects = new RulesAndHistoryObjects();
 
+        BookService bookService = new BookService();
+
+        bookService.SetMyBooks(ref rulesAndHistoryObjects.myDropdown);
+
         rulesAndHistoryObjects.newBooks.SetActive(false);
         rulesAndHistoryObjects.myBooks.SetActive(false);
         rulesAndHistoryObjects.startMenu.SetActive(false);
@@ -66,6 +70,5 @@ public class RulesAndHistory : MonoBehaviour
             ref rulesAndHistoryObjects.newBooks
             )
             );
-
     }
 }
