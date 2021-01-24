@@ -1,74 +1,63 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class RulesAndHistory : MonoBehaviour
 {
-    private RulesAndHistoryObjects rulesAndHistoryObjects;
     private ButtonService buttonService;
     public string topic = "rules";
     public int currentSlide = 1;
+
+    public int currentMyBook = 0;
+    public int currentNewBook = 0;
+
+    public List<Book> myBooks;
+    public List<Book> newBooks;
+
     void Start()
     {
-        rulesAndHistoryObjects = new RulesAndHistoryObjects();
+        new Translator(Constants.defaultLang);
+        new RulesAndHistoryObjects();
 
         BookService bookService = new BookService();
 
-        bookService.SetMyBooks(ref rulesAndHistoryObjects.myDropdown);
+        myBooks = bookService.GetBooks(Constants.myBooksType);
+        newBooks = bookService.GetBooks(Constants.newBooksType);
 
-        rulesAndHistoryObjects.newBooks.SetActive(false);
-        rulesAndHistoryObjects.myBooks.SetActive(false);
-        rulesAndHistoryObjects.startMenu.SetActive(false);
+        RulesAndHistoryObjects.startMenu.SetActive(false);
 
         buttonService = new ButtonService();
-        
+
         //leftButton
-        rulesAndHistoryObjects.leftButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisLeftButtonHandler(topic,
-            currentSlide,
-            rulesAndHistoryObjects.rulHisImage,
-            ref rulesAndHistoryObjects.magicBookUrl)
-            );
-        
+        RulesAndHistoryObjects.leftButton.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.rulHisLeftButtonHandler(topic, currentSlide));
+
         //rightButton
-        rulesAndHistoryObjects.rightButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisRightButtonHandler(topic,
-            currentSlide,
-            rulesAndHistoryObjects.rulHisImage,
-            ref rulesAndHistoryObjects.magicBookUrl)
-            );
+        RulesAndHistoryObjects.rightButton.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.rulHisRightButtonHandler(topic, currentSlide));
 
         //rulesButton
-        rulesAndHistoryObjects.rulesButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler(ref rulesAndHistoryObjects.rulHisImage));
-        
+        RulesAndHistoryObjects.rulesButton.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler());
+
         //historyButton
-        rulesAndHistoryObjects.historyButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler(ref rulesAndHistoryObjects.rulHisImage));
+        RulesAndHistoryObjects.historyButton.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler());
 
         //skipButton
-        rulesAndHistoryObjects.skipButton.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler(ref rulesAndHistoryObjects));
-
-        //magicBookUrl
-        rulesAndHistoryObjects.magicBookUrl.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.openMagicBookUrl());
-
+        RulesAndHistoryObjects.skipButton.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler());
 
         //myBooksBtn
-        rulesAndHistoryObjects.myBooksBtn.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.myBooksBtnHandler(
-            ref rulesAndHistoryObjects.myBooks,
-            ref rulesAndHistoryObjects.newBooks
-            )
-            );
+        RulesAndHistoryObjects.myBooksBtn.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.myBooksBtnHandler());
 
         //newBooksBtn
-        rulesAndHistoryObjects.newBooksBtn.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.newBooksBtnHandler(
-            ref rulesAndHistoryObjects.myBooks,
-            ref rulesAndHistoryObjects.newBooks
-            )
-            );
+        RulesAndHistoryObjects.newBooksBtn.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.newBooksBtnHandler());
+
+        //startGameBtn
+        RulesAndHistoryObjects.startGameBtn.GetComponent<Button>()
+            .onClick.AddListener(() => buttonService.startGameBtnHandler());
     }
 }

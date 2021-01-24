@@ -3,11 +3,11 @@ public class Book
 {
     public int id;  
     
-    public string externalId;   
+    public string code;   
 
     public string name;   
     
-    public string uri;
+    public string pdfUri;
     
     public string qrCode;    
 }

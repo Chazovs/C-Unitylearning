@@ -2,26 +2,26 @@
 
 class RulesAndHistoryObjects
 {
-    public GameObject rightButton;
-    public GameObject leftButton;
-    public GameObject skipButton;
-    public GameObject rulesButton;
-    public GameObject historyButton;
-    public GameObject rulHisImage;
-    public GameObject magicBookUrl;
-    public GameObject inputVersion;
-    public GameObject checkVersionButton;
-    public GameObject magicBookTitle;
-    public GameObject versionNumberText;
-    public GameObject myBooksBtn;
-    public GameObject newBooksBtn;
-    public GameObject myDropdown;
-    public GameObject qrCodeImage;
+    public static GameObject rightButton;
+    public static GameObject leftButton;
+    public static GameObject skipButton;
+    public static GameObject rulesButton;
+    public static GameObject historyButton;
+    public static GameObject rulHisImage;
+    public static GameObject magicBookUrl;
+    public static GameObject magicBookTitle;
+    public static GameObject startGameBtn;
+    public static GameObject bookDropdown;
+    public static GameObject qrCodeImage;
+    public static GameObject mainCamera;
+    public static GameObject newBooksBtn;
+    public static GameObject startMenuElements;
+    public static GameObject exceptionMsg;
+    public static GameObject myBooksBtn;
 
-    public GameObject mainCanva;
-    public GameObject startMenu;
-    public GameObject myBooks;
-    public GameObject newBooks;
+    public static GameObject mainCanva;
+    public static GameObject startMenu;
+    public static GameObject bookSectionTitle;
 
     public RulesAndHistoryObjects()
     {
@@ -32,18 +32,19 @@ class RulesAndHistoryObjects
         historyButton = GameObject.Find("historyButton");
         rulHisImage = GameObject.Find("rulHisImage");
         magicBookUrl = GameObject.Find("magicBookUrl");
-        inputVersion = GameObject.Find("inputVersion");
-        checkVersionButton = GameObject.Find("checkVersionButton");
         magicBookTitle = GameObject.Find("magicBookTitle");
-        versionNumberText = GameObject.Find("versionNumberText");
+        startGameBtn = GameObject.Find("startGameBtn");
+        bookDropdown = GameObject.Find("bookDropdown");
+        qrCodeImage = GameObject.Find("qrCodeImage");
         newBooksBtn = GameObject.Find("newBooksBtn");
         myBooksBtn = GameObject.Find("myBooksBtn");
-        myDropdown = GameObject.Find("myDropdown");
-        qrCodeImage = GameObject.Find("qrCodeImage");
+
+        mainCamera = GameObject.Find("mainCamera");
+        startMenuElements = GameObject.Find("startMenuElements");
 
         mainCanva = GameObject.Find("mainCanva");
         startMenu = GameObject.Find("startMenu");
-        myBooks = GameObject.Find("myBooks");
-        newBooks = GameObject.Find("newBooks");
+        bookSectionTitle = GameObject.Find("bookSectionTitle");
+        exceptionMsg = GameObject.Find("exceptionMsg");
     }
 }

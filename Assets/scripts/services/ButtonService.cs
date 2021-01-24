@@ -1,7 +1,7 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
-using System;
 using UnityEngine.UI;
+using System;
 
 public class ButtonService : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class ButtonService : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    internal void rulHisLeftButtonHandler(string topic, int currentSlide, GameObject img, ref GameObject gameURL)
+    internal void rulHisLeftButtonHandler(string topic, int currentSlide)
     {
         int nextSlide = currentSlide -1;
 
@@ -18,22 +18,22 @@ public class ButtonService : MonoBehaviour
             nextSlide = nextSlide == 0 ? Constants.lastRulesSlide : nextSlide;
             if (nextSlide == 6)
             {
-                gameURL.SetActive(true);
+                RulesAndHistoryObjects.magicBookUrl.SetActive(true);
             }
             else
             {
-                gameURL.SetActive(false);
+                RulesAndHistoryObjects.magicBookUrl.SetActive(false);
             }
         }
         
         if(topic == "history") {
             nextSlide = nextSlide == 0 ? Constants.lastHistorySlide : nextSlide;
         }
-        GameObject.Find("Main Camera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
-        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
+        GameObject.Find("mainCamera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
+        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
     }
 
-    internal void rulHisRightButtonHandler(string topic, int currentSlide, GameObject img, ref GameObject gameURL)
+    internal void rulHisRightButtonHandler(string topic, int currentSlide)
     {
         int nextSlide = currentSlide + 1;
 
@@ -42,11 +42,11 @@ public class ButtonService : MonoBehaviour
             nextSlide = nextSlide > Constants.lastRulesSlide ? 1 : nextSlide;
             if (nextSlide == 6)
             {
-                gameURL.SetActive(true);
+                RulesAndHistoryObjects.magicBookUrl.SetActive(true);
             }
             else
             {
-                gameURL.SetActive(false);
+                RulesAndHistoryObjects.magicBookUrl.SetActive(false);
             }
         }
 
@@ -54,47 +54,85 @@ public class ButtonService : MonoBehaviour
         {
             nextSlide = nextSlide > Constants.lastHistorySlide ? 1 : nextSlide;
         }
-        GameObject.Find("Main Camera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
-        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" + topic + "/" + nextSlide.ToString());
+
+        GameObject.Find("mainCamera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
+        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" + topic + "/" + nextSlide.ToString());
     }
 
-    internal void openMagicBookUrl()
+    internal static void openMagicBookUrl(string url)
     {
-        Application.OpenURL(Constants.serverUrl);
+        Application.OpenURL(url);
     }
 
-    internal void rulHisRulesButtonHandler(ref GameObject img)
+    internal void rulHisRulesButtonHandler()
     {
-        RulesAndHistory component = GameObject.Find("Main Camera").GetComponent<RulesAndHistory>();
+        RulesAndHistory component = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
         component.currentSlide = 1;
         component.topic = "rules";
-        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/rules/1");
+        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/rules/1");
     }
 
-    internal void myBooksBtnHandler(ref GameObject myBooks, ref GameObject newBooks)
+    internal void startGameBtnHandler()
     {
-        myBooks.SetActive(true);
-        newBooks.SetActive(false);
+        SceneManager.LoadScene("Game");
     }
 
-    internal void rulHisHistoryButtonHandler(ref GameObject img)
+    internal void myBooksBtnHandler()
     {
-        RulesAndHistory component = GameObject.Find("Main Camera").GetComponent<RulesAndHistory>();
+        RulesAndHistory rulesAndHistory
+          = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
+
+        if (rulesAndHistory.myBooks.Count == 0)
+        {
+            RulesAndHistoryObjects.startMenuElements.SetActive(false);
+            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text = Langs.GetMessge("NO_MY_BOOKS");
+            RulesAndHistoryObjects.exceptionMsg.SetActive(true);
+        }
+
+        if (rulesAndHistory.myBooks.Count > 0)
+        {
+            RulesAndHistoryObjects.startMenuElements.SetActive(true);
+            RulesAndHistoryObjects.exceptionMsg.SetActive(false);
+        }
+
+        BookService bookService = new BookService();
+        bookService.setCurrentMyBook();
+    }
+
+    internal void rulHisHistoryButtonHandler()
+    {
+        RulesAndHistory component = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
         component.currentSlide = 1;
         component.topic = "history";
-        img.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/history/1");
+        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/history/1");
     }
 
-    internal void newBooksBtnHandler(ref GameObject myBooks, ref GameObject newBooks)
+    internal void newBooksBtnHandler()
     {
-        myBooks.SetActive(false);
-        newBooks.SetActive(true);
+        RulesAndHistory rulesAndHistory 
+            = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
+
+        if (rulesAndHistory.newBooks.Count == 0)
+        {
+            RulesAndHistoryObjects.startMenuElements.SetActive(false);
+            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text = Langs.GetMessge("NO_NEW_BOOKS");
+            RulesAndHistoryObjects.exceptionMsg.SetActive(true);
+        }
+
+        if (rulesAndHistory.newBooks.Count > 0)
+        {
+            RulesAndHistoryObjects.startMenuElements.SetActive(true);
+            RulesAndHistoryObjects.exceptionMsg.SetActive(false);
+        }
     }
 
-    internal void rulHisSkipButtonHandler(ref RulesAndHistoryObjects rulesAndHistoryObjects)
+    internal void rulHisSkipButtonHandler()
     {
-        rulesAndHistoryObjects.mainCanva.SetActive(false);
-        rulesAndHistoryObjects.startMenu.SetActive(true);
-        rulesAndHistoryObjects.myBooks.SetActive(true);
+        BookService bookService = new BookService();
+        bookService.setCurrentMyBook();
+        bookService.SetMyBooksDropDown();
+
+        RulesAndHistoryObjects.mainCanva.SetActive(false);
+        RulesAndHistoryObjects.startMenu.SetActive(true);
     }
 }

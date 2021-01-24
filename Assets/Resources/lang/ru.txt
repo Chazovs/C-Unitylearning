@@ -1,10 +1,2 @@
-﻿you=Ты
-see=увидел
-youSee=услышал
-youSee=почувствовал
-youSee=вкус
-youSee=запах
-youSee=ветер
-youSee=лес
-youSee=поле
-youSee=одиноко стоящую на опушке избу
+﻿NO_NEW_BOOKS=НЕТ НОВЫХ КНИГ
+NO_MY_BOOKS=НЕТ ДОСТУПНЫХ КНИГ
