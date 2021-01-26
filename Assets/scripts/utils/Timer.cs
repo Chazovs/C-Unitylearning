@@ -7,10 +7,10 @@ public class Timer : MonoBehaviour
     Image timerBar;
     private float maTime;
     private float timeLeft;
-    public Timer(GameObject timerBarImage)
+    public Timer()
     {
         maTime = timeLeft = Constants.totalTime;
-        timerBar = timerBarImage.GetComponent<Image>();
+        timerBar = GameObjects.timerBarImage.GetComponent<Image>();
     }
     public void updateTimer()
     {

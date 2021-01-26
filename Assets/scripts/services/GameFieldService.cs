@@ -7,12 +7,10 @@ public class GameFieldService : MonoBehaviour
     private Main mainComponent;
     private GameObjects _gameObjects;
     private int safeFieldsIndex;
-    private int dangerousFieldsIndex;
 
-    public GameFieldService(ref GameObjects gameObjects)
+    public GameFieldService()
     {
-        _gameObjects = gameObjects;
-        mainComponent = _gameObjects.main.GetComponent<Main>();
+        mainComponent = GameObjects.main.GetComponent<Main>();
     }
     
     /*
@@ -135,7 +133,7 @@ public class GameFieldService : MonoBehaviour
 
     public void setOpenField(Position openedField)
     {
-         GameObject instance = Instantiate(_gameObjects.openField);
+         GameObject instance = Instantiate(GameObjects.openField);
          instance.transform.position = new Vector3(
             instance.transform.position.x + (Constants.step / 2) + (Constants.step * openedField.x ) - Constants.step,
             instance.transform.position.y + (Constants.step / 2) + (Constants.step * openedField.y) - Constants.step,

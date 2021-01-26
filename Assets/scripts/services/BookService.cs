@@ -19,6 +19,15 @@ public class BookService
         }
 
         dropDown.captionText.text = books[0].name;
+
+        dropDown.onValueChanged.RemoveAllListeners();
+        dropDown.onValueChanged.AddListener(delegate { ChangeCurrentMyBook(dropDown); });
+    }
+
+    private void ChangeCurrentMyBook(Dropdown dropDown)
+    {
+        RulesAndHistory.currentMyBook = dropDown.value;
+        setCurrentMyBook();
     }
 
     internal List<Book> GetBooks(string bookType)
@@ -42,10 +51,9 @@ public class BookService
 
     public void setCurrentMyBook()
     {
-        int myBookIndex = RulesAndHistoryObjects.mainCamera.GetComponent<RulesAndHistory>().currentMyBook;
+        int myBookIndex = RulesAndHistory.currentMyBook;
 
-        Book myBook = RulesAndHistoryObjects.mainCamera.GetComponent<RulesAndHistory>().myBooks[myBookIndex];
-
+        Book myBook = RulesAndHistory.myBooks[myBookIndex];
 
         byte[] imageBytes = Convert.FromBase64String(myBook.qrCode);
         Texture2D tex = new Texture2D(370, 370);
@@ -61,5 +69,9 @@ public class BookService
         //magicBookUrl
         RulesAndHistoryObjects.magicBookUrl.GetComponent<Button>()
             .onClick.AddListener(() => ButtonService.openMagicBookUrl(url));
+
+        //startGameBtn
+        RulesAndHistoryObjects.startGameBtn.GetComponent<Button>()
+            .onClick.AddListener(() => ButtonService.startGameBtnHandler());
     }
 }

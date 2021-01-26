@@ -8,11 +8,11 @@ public class RulesAndHistory : MonoBehaviour
     public string topic = "rules";
     public int currentSlide = 1;
 
-    public int currentMyBook = 0;
-    public int currentNewBook = 0;
+    public static int currentMyBook = 0;
+    public static int currentNewBook = 0;
 
-    public List<Book> myBooks;
-    public List<Book> newBooks;
+    public static List<Book> myBooks;
+    public static List<Book> newBooks;
 
     void Start()
     {
@@ -55,9 +55,5 @@ public class RulesAndHistory : MonoBehaviour
         //newBooksBtn
         RulesAndHistoryObjects.newBooksBtn.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.newBooksBtnHandler());
-
-        //startGameBtn
-        RulesAndHistoryObjects.startGameBtn.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.startGameBtnHandler());
     }
 }

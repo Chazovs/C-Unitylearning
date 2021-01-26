@@ -2,21 +2,6 @@
  * Internationalization 
  * 
  * Author: Daniel Erdmann
- * 
- * 1. Add this File to you Project
- * 
- * 2. Add the language files to the folder Assets/Resources/I18n. (Filesnames: en.txt, es.txt, pt.txt, de.txt, and so on)
- *    Format: en.txt:           es.txt:
- *           =============== =================
- *           |hello=Hello  | |hello=Hola     |
- *           |world=World  | |world=Mundo    |
- *           |...          | |...            |
- *           =============== =================
- *           
- * 3. Use it! 
- *    Debug.Log(I18n.Fields["hello"] + " " + I18n.Fields["world"]); //"Hello World" or "Hola Mundo"
- * 
- * Use \n for new lines. Fallback language is "en"
  */
 
 using System;
@@ -25,36 +10,26 @@ using UnityEngine;
 
 class Translator
 {
-    /// <summary>
-    /// Text Fields
-    /// Useage: Fields[key]
-    /// Example: I18n.Fields["world"]
-    /// </summary>
     public static Dictionary<String, String> Fields { get; private set; }
 
-    /// <summary>
-    /// Init on first use
-    /// </summary>
     public Translator(string lang)
     {
         LoadLanguage(lang);
     }
 
-    /// <summary>
-    /// Load language files from ressources
-    /// </summary>
     private static void LoadLanguage(string lang)
     {
         if (Fields == null)
+        {
             Fields = new Dictionary<string, string>();
+        }
 
         Fields.Clear();
         
-        //lang = "de";
-        var textAsset = Resources.Load(@"lang/" + lang); //no .txt needed
+        var textAsset = Resources.Load(@"lang/" + lang);
         string allTexts = "";
         if (textAsset == null)
-            textAsset = Resources.Load(@"lang/ru") as TextAsset; //no .txt needed
+            textAsset = Resources.Load(@"lang/ru") as TextAsset;
         if (textAsset == null)
             Debug.LogError("File not found for lang: Assets/Resources/lang/" + lang + ".txt");
         allTexts = (textAsset as TextAsset).text;

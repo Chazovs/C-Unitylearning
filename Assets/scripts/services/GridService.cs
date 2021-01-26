@@ -2,16 +2,11 @@
 
 public class GridService : MonoBehaviour
 {
-
-    private GameObject main;
     private Main mainComponent;
-    private GameObjects gameObjects;
 
-    public GridService(ref GameObjects _gameObjects)
+    public GridService()
     {
-        gameObjects = _gameObjects;
-        main = _gameObjects.main;
-        mainComponent = main.GetComponent<Main>();
+        mainComponent = GameObjects.main.GetComponent<Main>();
     }
 
     public void setGoal()
@@ -30,10 +25,10 @@ public class GridService : MonoBehaviour
             goalPosition.y = Random.Range(1, 7);
         }
 
-        gameObjects.endPoint.transform.position = new Vector3(
-            (gameObjects.endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x)-Constants.step,
-            (gameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y)-Constants.step,
-            gameObjects.endPoint.transform.position.z
+        GameObjects.endPoint.transform.position = new Vector3(
+            (GameObjects.endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x)-Constants.step,
+            (GameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y)-Constants.step,
+            GameObjects.endPoint.transform.position.z
             );
         
         mainComponent.goalPosition = goalPosition;

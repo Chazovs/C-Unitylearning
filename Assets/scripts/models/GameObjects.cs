@@ -2,17 +2,17 @@
 
 public class GameObjects : MonoBehaviour
 {
-    public GameObject grid;
-    public GameObject endPoint;
-    public GameObject timerBarImage;
-    public GameObject hero;
-    public GameObject card;
-    public GameObject cardText;
-    public GameObject cardImage;
-    public GameObject goCardButton;
-    public GameObject backCardButton;
-    public GameObject main;
-    public GameObject openField;
+    public static GameObject grid;
+    public static GameObject endPoint;
+    public static GameObject timerBarImage;
+    public static GameObject hero;
+    public static GameObject card;
+    public static GameObject cardText;
+    public static GameObject cardImage;
+    public static GameObject goCardButton;
+    public static GameObject backCardButton;
+    public static GameObject main;
+    public static GameObject openField;
 
     public GameObjects()
     {

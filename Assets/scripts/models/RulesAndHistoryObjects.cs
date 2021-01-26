@@ -18,6 +18,7 @@ class RulesAndHistoryObjects
     public static GameObject startMenuElements;
     public static GameObject exceptionMsg;
     public static GameObject myBooksBtn;
+    public static GameObject apiController;
 
     public static GameObject mainCanva;
     public static GameObject startMenu;
@@ -38,6 +39,7 @@ class RulesAndHistoryObjects
         qrCodeImage = GameObject.Find("qrCodeImage");
         newBooksBtn = GameObject.Find("newBooksBtn");
         myBooksBtn = GameObject.Find("myBooksBtn");
+        apiController = GameObject.Find("apiController");
 
         mainCamera = GameObject.Find("mainCamera");
         startMenuElements = GameObject.Find("startMenuElements");

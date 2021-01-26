@@ -16,19 +16,16 @@ public class CardService
     private Texture2D cardImageFile;
 
     Card currentCard;
-    private GameObjects gameObjects;
 
-    public CardService(ref GameObjects _gameObjects)
+    public CardService()
     {
-        gameObjects = _gameObjects;
+        mainComponent = GameObjects.main.GetComponent<Main>();
 
-        mainComponent = gameObjects.main.GetComponent<Main>();
-
-        cardObjectComponent = gameObjects.card.GetComponent<SpriteRenderer>();
-        cardTextComponent = gameObjects.cardText.GetComponent<Text>();
-        cardImageComponent = gameObjects.cardImage.GetComponent<RawImage>();
-        goCardButtonComponent = gameObjects.goCardButton.GetComponent<Button>();
-        backCardButtonComponent = gameObjects.backCardButton.GetComponent<Button>();
+        cardObjectComponent = GameObjects.card.GetComponent<SpriteRenderer>();
+        cardTextComponent = GameObjects.cardText.GetComponent<Text>();
+        cardImageComponent = GameObjects.cardImage.GetComponent<RawImage>();
+        goCardButtonComponent = GameObjects.goCardButton.GetComponent<Button>();
+        backCardButtonComponent = GameObjects.backCardButton.GetComponent<Button>();
     }
 
     internal void ShowController()
@@ -69,8 +66,8 @@ public class CardService
         cardTextComponent.enabled = true;
         cardImageComponent.enabled = true;
 
-        gameObjects.goCardButton.SetActive(true);
-        gameObjects.backCardButton.SetActive(true);
+        GameObjects.goCardButton.SetActive(true);
+        GameObjects.backCardButton.SetActive(true);
 
         cardTextComponent.text = card.text;
 
@@ -124,7 +121,7 @@ public class CardService
         cardTextComponent.enabled = false;
         cardImageComponent.enabled = false;
 
-        gameObjects.goCardButton.SetActive(false);
-        gameObjects.backCardButton.SetActive(false);
+        GameObjects.goCardButton.SetActive(false);
+        GameObjects.backCardButton.SetActive(false);
     }
 }

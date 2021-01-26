@@ -10,12 +10,12 @@ public class ServiceLocator
     public ButtonService buttonService;
     public GameFieldService gameFieldService;
 
-    public ServiceLocator(ref GameObjects gameObjects)
+    public ServiceLocator()
     {
-        cardService = new CardService(ref gameObjects);
-        heroService = new HeroService(ref gameObjects);
-        gridService = new GridService(ref gameObjects);
+        cardService = new CardService();
+        heroService = new HeroService();
+        gridService = new GridService();
         buttonService = new ButtonService();
-        gameFieldService = new GameFieldService(ref gameObjects);
+        gameFieldService = new GameFieldService();
     }
 }

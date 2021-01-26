@@ -18,9 +18,10 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameObjects = new GameObjects();
-        serviceLocator = new ServiceLocator(ref gameObjects);
-        timer = new Timer(gameObjects.timerBarImage);
+        new GameObjects();
+
+        serviceLocator = new ServiceLocator();
+        timer = new Timer();
         
         serviceLocator.cardService.hideCard();
         serviceLocator.gridService.setGoal();
