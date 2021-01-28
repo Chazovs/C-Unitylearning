@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ApiController : MonoBehaviour
 {
-
-    internal List<Card> getCardsAction(Book book)
+    internal void loadCardsAction(Book book)
     {
-        StartCoroutine(getCards(book));
-
-        return new List<Card>();
+        StartCoroutine(loadCards(book));
     }
     // Start is called before the first frame update
-    IEnumerator getCards(Book book)
+    IEnumerator loadCards(Book book)
     {
 
         /*var result  =  UnityWebRequest.Get(Constants.serverUrl + "books/" + book.code);*/
@@ -24,14 +21,33 @@ public class ApiController : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            Debug.Log(www.error);
+            RulesAndHistoryObjects.startMenuElements.SetActive(false);
+            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text
+                = Langs.GetMessge("NETWORK_ERROR");
+
+            yield break;
         }
         else
         {
-            // Show results as text
-            Debug.Log(www.downloadHandler.text);
+            GetCardResponse response 
+                =  JsonUtility.FromJson<GetCardResponse>(www.downloadHandler.text);
+
+            if (response.cards.safety.Count == 0)
+            {
+                RulesAndHistoryObjects.startMenuElements.SetActive(false);
+                RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text
+                    = Langs.GetMessge("NETWORK_ERROR");
+
+                yield break;
+            }
+            else
+            {
+                Main.safetyCards = response.cards.safety;
+                Main.dangerousCards = response.cards.dangerous;
+                Main.book = response.book;
+
+                SceneManager.LoadScene("Game");
+            }
         }
     }
-
-    
 }

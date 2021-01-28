@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    internal static List<Card> safetyCards;
+    internal static List<Card> dangerousCards;
+    internal static Book book;
     public ServiceLocator serviceLocator;
     public Position goalPosition;
     public Card[,] gameFields = new Card[(int)Constants.fieldSize, (int)Constants.fieldSize];
