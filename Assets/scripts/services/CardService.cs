@@ -30,6 +30,8 @@ public class CardService
 
     internal void ShowController()
     {
+        HeroService heroService = ServiceLocator.GetService<HeroService>();
+
         //если герой пришел к цели
         if (mainComponent.heroPosition.x == mainComponent.goalPosition.x
             && mainComponent.heroPosition.y == mainComponent.goalPosition.y
@@ -55,7 +57,7 @@ public class CardService
 
         showCard(ref card);
         mainComponent.isCardShowing = true;
-        mainComponent.serviceLocator.heroService.isInputBlocked = true;
+        heroService.isInputBlocked = true;
     }
 
     public void showCard(ref Card card)
@@ -91,11 +93,14 @@ public class CardService
 
     public void safetyAction()
     {
+        GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
+        HeroService heroService = ServiceLocator.GetService<HeroService>();
+
         hideCard();
-        mainComponent.serviceLocator.gameFieldService.setOpenField(currentCard.position);
+        gameFieldService.setOpenField(currentCard.position);
 
         mainComponent.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
-        mainComponent.serviceLocator.heroService.isInputBlocked = false;
+        heroService.isInputBlocked = false;
         mainComponent.isCardShowing = false;
     }
 
@@ -107,12 +112,14 @@ public class CardService
 
     public void backAction()
     {
+        HeroService heroService = ServiceLocator.GetService<HeroService>();
+
         hideCard();
 
         mainComponent.isCardShowing = false;
-        mainComponent.serviceLocator.heroService.isInputBlocked = false;
+        heroService.isInputBlocked = false;
 
-        mainComponent.serviceLocator.heroService.goBack();
+        heroService.goBack();
     }
 
     public void hideCard()

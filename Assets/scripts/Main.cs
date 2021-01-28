@@ -6,7 +6,6 @@ public class Main : MonoBehaviour
     internal static List<Card> safetyCards;
     internal static List<Card> dangerousCards;
     internal static Book book;
-    public ServiceLocator serviceLocator;
     public Position goalPosition;
     public Card[,] gameFields = new Card[(int)Constants.fieldSize, (int)Constants.fieldSize];
     public GameObjects gameObjects;
@@ -19,17 +18,26 @@ public class Main : MonoBehaviour
 
     private Timer timer;
 
+    CardService cardService;
+    GridService gridService;
+    GameFieldService gameFieldService;
+    HeroService heroService;
+
     // Start is called before the first frame update
     void Start()
     {
         new GameObjects();
 
-        serviceLocator = new ServiceLocator();
+        cardService = ServiceLocator.GetService<CardService>();
+        gridService = ServiceLocator.GetService<GridService>();
+        gameFieldService = ServiceLocator.GetService<GameFieldService>();
+        heroService = ServiceLocator.GetService<HeroService>();
+
         timer = new Timer();
-        
-        serviceLocator.cardService.hideCard();
-        serviceLocator.gridService.setGoal();
-        serviceLocator.gameFieldService.FillGameFields();
+
+        cardService.hideCard();
+        gridService.setGoal();
+        gameFieldService.FillGameFields();
 
         //рантайм тесты
         FieldTest.showField(); //показать все поле с координатами и карточками
@@ -39,6 +47,6 @@ public class Main : MonoBehaviour
     void Update()
     {
         timer.updateTimer();
-        serviceLocator.heroService.Move();
+        heroService.Move();
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class RulesAndHistory : MonoBehaviour
 {
-    private ButtonService buttonService;
     public string topic = "rules";
     public int currentSlide = 1;
 
@@ -13,20 +12,21 @@ public class RulesAndHistory : MonoBehaviour
 
     public static List<Book> myBooks;
     public static List<Book> newBooks;
+    
+    private BookService bookService;
+    private ButtonService buttonService;
 
     void Start()
     {
-        new Translator(Constants.defaultLang);
         new RulesAndHistoryObjects();
 
-        BookService bookService = new BookService();
+        bookService = ServiceLocator.GetService<BookService>();
+        buttonService = ServiceLocator.GetService<ButtonService>();
 
         myBooks = bookService.GetBooks(Constants.myBooksType);
         newBooks = bookService.GetBooks(Constants.newBooksType);
 
         RulesAndHistoryObjects.startMenu.SetActive(false);
-
-        buttonService = new ButtonService();
 
         //leftButton
         RulesAndHistoryObjects.leftButton.GetComponent<Button>()

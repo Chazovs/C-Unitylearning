@@ -19,7 +19,6 @@ public class HeroService : MonoBehaviour
 
     public HeroService()
     {
-        
         mainComponent = GameObjects.main.GetComponent<Main>();
 
         GameObjects.hero.transform.position = new Vector3(
@@ -42,7 +41,9 @@ public class HeroService : MonoBehaviour
 
     public void Move()
     {
-        mainComponent.serviceLocator.cardService.ShowController();
+        CardService cardService = ServiceLocator.GetService<CardService>();
+
+        cardService.ShowController();
 
         if (mainComponent.isCardShowing) return;
 

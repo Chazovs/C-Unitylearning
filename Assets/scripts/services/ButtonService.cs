@@ -1,7 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class ButtonService : MonoBehaviour
 {
@@ -29,6 +28,12 @@ public class ButtonService : MonoBehaviour
         RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
 
         RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge(nextSlideText);
+    }
+
+    internal void setLangHandler(string lang)
+    {
+        new Translator(lang);
+        SceneManager.LoadScene("Rules");
     }
 
     internal void rulHisRightButtonHandler(string topic, int currentSlide)

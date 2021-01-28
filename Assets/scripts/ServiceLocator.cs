@@ -1,21 +1,30 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ServiceLocator
 {
-    public CardService cardService;
-    public HeroService heroService;
-    public GridService gridService;
-    public ButtonService buttonService;
-    public GameFieldService gameFieldService;
+    private static Dictionary<string, object> services = new Dictionary<string, object>();
 
-    public ServiceLocator()
+    public static T GetService<T>()
     {
-        cardService = new CardService();
-        heroService = new HeroService();
-        gridService = new GridService();
-        buttonService = new ButtonService();
-        gameFieldService = new GameFieldService();
+        if (services.ContainsKey(typeof(T).Name))
+        {
+            return (T)services[typeof(T).Name];
+        }
+        else if (typeof(T) != null)
+        {
+            Type testType = typeof(T);
+            
+            System.Reflection.ConstructorInfo ci = testType.GetConstructor(new Type[] { });
+
+            //вызываем конструтор
+            object service = ci.Invoke(new object[] { });
+
+            services.Add(typeof(T).Name, service);
+
+            return (T)services[typeof(T).Name];
+        }
+
+        throw new Exception("Сервис не найден");
     }
 }
