@@ -26,6 +26,8 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = Settings.defaultFramRate;
+
         new GameObjects();
 
         cardService = ServiceLocator.GetService<CardService>();

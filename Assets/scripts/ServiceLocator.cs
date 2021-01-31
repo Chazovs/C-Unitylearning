@@ -14,10 +14,7 @@ public class ServiceLocator
         else if (typeof(T) != null)
         {
             Type testType = typeof(T);
-            
             System.Reflection.ConstructorInfo ci = testType.GetConstructor(new Type[] { });
-
-            //вызываем конструтор
             object service = ci.Invoke(new object[] { });
 
             services.Add(typeof(T).Name, service);

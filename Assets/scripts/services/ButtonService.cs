@@ -1,8 +1,9 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ButtonService : MonoBehaviour
+public class ButtonService : MonoBehaviour, IPointerEnterHandler
 {
     public void StartGame()
     {
@@ -143,5 +144,20 @@ public class ButtonService : MonoBehaviour
 
         RulesAndHistoryObjects.mainCanva.SetActive(false);
         RulesAndHistoryObjects.startMenu.SetActive(true);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (Settings.logoLang == "ru" && name == "english")
+        {
+            Settings.logoLang = "en";
+            PreviewScreen.goChangeLogo = true;
+        }
+
+        if (Settings.logoLang == "en" && name == "russian")
+        {
+            Settings.logoLang = "ru";
+            PreviewScreen.goChangeLogo = true;
+        }
     }
 }

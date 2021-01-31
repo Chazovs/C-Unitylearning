@@ -32,7 +32,7 @@ public class ApiController : MonoBehaviour
             GetCardResponse response 
                 =  JsonUtility.FromJson<GetCardResponse>(www.downloadHandler.text);
 
-            if (response.cards.safety.Count == 0)
+            if (response.cards == null)
             {
                 RulesAndHistoryObjects.startMenuElements.SetActive(false);
                 RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text

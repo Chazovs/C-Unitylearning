@@ -18,6 +18,8 @@ public class RulesAndHistory : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = Settings.defaultFramRate;
+
         new RulesAndHistoryObjects();
 
         Langs.SetLangsForRules();
