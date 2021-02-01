@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour
         maTime = timeLeft = Constants.totalTime;
         timerBar = GameObjects.timerBarImage.GetComponent<Image>();
     }
-    public void updateTimer()
+    public void UpdateTimer()
     {
         if (timeLeft > 0)
         {

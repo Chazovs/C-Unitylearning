@@ -5,39 +5,21 @@ public class HeroService : MonoBehaviour
     private Vector2 _movementDirection;
 
     private Vector3 _destination = new Vector3();
-    private Vector3 _startField;
-    private Vector3 _endField;
 
-
-    private float _horizontVector = 0;
-    private float _verticalVector = 0;
-    private Main mainComponent;
     private KeyInput keyInput = new KeyInput();
 
-    public bool isInputBlocked = false;
-    Vector3 nullPosition;
+
 
     public HeroService()
     {
-        mainComponent = GameObjects.main.GetComponent<Main>();
-
         GameObjects.hero.transform.position = new Vector3(
             GameObjects.hero.transform.position.x + (Constants.step / 2),
             GameObjects.hero.transform.position.y - (Constants.step / 2) + (Constants.step * Constants.fieldSize),
             GameObjects.hero.transform.position.z
             );
 
-        _startField = GameObjects.hero.transform.position;
-        nullPosition = new Vector3() { x = Constants.fieldSize / 2 * Constants.step, y = Constants.fieldSize / 2 * Constants.step };
-        _endField = new Vector3(
-            _startField.x + Constants.step * (Constants.fieldSize - 1),
-            _startField.y - Constants.step * (Constants.fieldSize - 1),
-            GameObjects.hero.transform.position.z
-            );
-
         _destination = GameObjects.hero.transform.position;
     }
-
 
     public void Move()
     {
@@ -45,33 +27,33 @@ public class HeroService : MonoBehaviour
 
         cardService.ShowController();
 
-        if (mainComponent.isCardShowing) return;
+        if (Main.isCardShowing) return;
 
         keyInput.x = keyInput.y = 0;
 
         //если герой не движется, то можно принимать значение ввода
-        if (!mainComponent.heroPosition.onTheWay) {
+        if (!Main.heroPosition.onTheWay) {
             keyInput.x = Input.GetAxisRaw("Horizontal");
             keyInput.y = Input.GetAxisRaw("Vertical");
         };
 
         if(keyInput.x != 0 || keyInput.y != 0)
         {
-            mainComponent.heroPosition.onTheWay = true;
+            Main.heroPosition.onTheWay = true;
 
-            mainComponent.newPosition = new Position
+            Main.newPosition = new Position
             {
-                x = mainComponent.heroPosition.x + keyInput.x,
-                y = mainComponent.heroPosition.y + keyInput.y
+                x = Main.heroPosition.x + keyInput.x,
+                y = Main.heroPosition.y + keyInput.y
             };
 
-            bool canMove = mainComponent.newPosition.x > 0
-            && mainComponent.newPosition.x < 11
-            && mainComponent.newPosition.y > 0
-            && mainComponent.newPosition.y < 11;
+            bool canMove = Main.newPosition.x > 0
+            && Main.newPosition.x < 11
+            && Main.newPosition.y > 0
+            && Main.newPosition.y < 11;
 
             if (!canMove) {
-                mainComponent.heroPosition.onTheWay = false;
+                Main.heroPosition.onTheWay = false;
                 return;
             }
 
@@ -84,18 +66,18 @@ public class HeroService : MonoBehaviour
 
         //если туда можно двигаться и если мы еще не там - идем туда
         if (_destination != GameObjects.hero.transform.position) {
-            mainComponent.heroPosition.onTheWay = true;
+            Main.heroPosition.onTheWay = true;
             GameObjects.hero.transform.position = Vector3.MoveTowards(GameObjects.hero.transform.position, _destination, Constants.speed * Time.deltaTime);
 
             return;
         }
 
         //если мы пришли
-        if (mainComponent.heroPosition.onTheWay && GameObjects.hero.transform.position == _destination)
+        if (Main.heroPosition.onTheWay && GameObjects.hero.transform.position == _destination)
         {
-            mainComponent.previousPosition = mainComponent.heroPosition;
-            mainComponent.heroPosition = mainComponent.newPosition;
-            mainComponent.heroPosition.onTheWay = false;
+            Main.previousPosition = Main.heroPosition;
+            Main.heroPosition = Main.newPosition;
+            Main.heroPosition.onTheWay = false;
 
             return;
         }
@@ -106,17 +88,21 @@ public class HeroService : MonoBehaviour
         if (_destination == GameObjects.hero.transform.position)
         {
             _movementDirection.Set(
-            (mainComponent.previousPosition.x - mainComponent.heroPosition.x) * Constants.step,
-            (mainComponent.previousPosition.y - mainComponent.heroPosition.y) * Constants.step
+            (Main.previousPosition.x - Main.heroPosition.x) * Constants.step,
+            (Main.previousPosition.y - Main.heroPosition.y) * Constants.step
             );
 
-        _destination = GameObjects.hero.transform.position + (Vector3)_movementDirection;
+            _destination = GameObjects.hero.transform.position + (Vector3)_movementDirection;
 
-            GameObjects.hero.transform.position = Vector3.MoveTowards(GameObjects.hero.transform.position, _destination, Constants.speed * Time.deltaTime);
+            GameObjects.hero.transform.position 
+                = Vector3.MoveTowards(GameObjects.hero.transform.position,
+                _destination,
+                Constants.speed * Time.deltaTime
+                );
         
             _movementDirection.Set(
-            (mainComponent.previousPosition.x - mainComponent.heroPosition.x) * Constants.step,
-            (mainComponent.previousPosition.y - mainComponent.heroPosition.y) * Constants.step
+            (Main.previousPosition.x - Main.heroPosition.x) * Constants.step,
+            (Main.previousPosition.y - Main.heroPosition.y) * Constants.step
             );
 
             _destination = GameObjects.hero.transform.position + (Vector3)_movementDirection;
@@ -127,13 +113,13 @@ public class HeroService : MonoBehaviour
                 Constants.speed * Time.deltaTime
                 );
 
-            mainComponent.heroPosition.onTheWay = false;
-            mainComponent.heroPosition.x = mainComponent.previousPosition.x;
-            mainComponent.heroPosition.y = mainComponent.previousPosition.y;
-    }
+            Main.heroPosition.onTheWay = false;
+            Main.heroPosition.x = Main.previousPosition.x;
+            Main.heroPosition.y = Main.previousPosition.y;
+        }
         else
         {
-            mainComponent.heroPosition.onTheWay = true;
+            Main.heroPosition.onTheWay = true;
         }
     }
 }

@@ -7,20 +7,13 @@ public class CardService
     SpriteRenderer cardObjectComponent;
     Text cardTextComponent;
     RawImage cardImageComponent;
-    public GameObject goCardButton;
-    public GameObject backCardButton;
     Button goCardButtonComponent;
     Button backCardButtonComponent;
-
-    private Main mainComponent;
-    private Texture2D cardImageFile;
 
     Card currentCard;
 
     public CardService()
     {
-        mainComponent = GameObjects.main.GetComponent<Main>();
-
         cardObjectComponent = GameObjects.card.GetComponent<SpriteRenderer>();
         cardTextComponent = GameObjects.cardText.GetComponent<Text>();
         cardImageComponent = GameObjects.cardImage.GetComponent<RawImage>();
@@ -33,9 +26,9 @@ public class CardService
         HeroService heroService = ServiceLocator.GetService<HeroService>();
 
         //если герой пришел к цели
-        if (mainComponent.heroPosition.x == mainComponent.goalPosition.x
-            && mainComponent.heroPosition.y == mainComponent.goalPosition.y
-            && mainComponent.heroPosition.onTheWay == false
+        if (Main.heroPosition.x == Main.goalPosition.x
+            && Main.heroPosition.y == Main.goalPosition.y
+            && Main.heroPosition.onTheWay == false
             )
         {
             SceneManager.LoadScene("End");
@@ -43,21 +36,20 @@ public class CardService
             return;
         }
 
-        Card card = mainComponent.gameFields[(int)mainComponent.heroPosition.x - 1, (int)mainComponent.heroPosition.y - 1];
+        Card card = Main.gameFields[(int)Main.heroPosition.x - 1, (int)Main.heroPosition.y - 1];
 
-        if (mainComponent.heroPosition.onTheWay
-            || mainComponent.isCardShowing
+        if (Main.heroPosition.onTheWay
+            || Main.isCardShowing
             || card.isWin
             || card.isOpen
-            || mainComponent.heroPosition.x == 1 && mainComponent.heroPosition.y == Constants.fieldSize
+            || Main.heroPosition.x == 1 && Main.heroPosition.y == Constants.fieldSize
             )
         {
             return;
         }
 
         showCard(ref card);
-        mainComponent.isCardShowing = true;
-        heroService.isInputBlocked = true;
+        Main.isCardShowing = true;
     }
 
     public void showCard(ref Card card)
@@ -73,9 +65,8 @@ public class CardService
 
         cardTextComponent.text = card.text;
 
-        string imagePath = "img/cards/" + card.imageFileName;
-        cardImageFile = Resources.Load(imagePath) as Texture2D;
-        cardImageComponent.texture = cardImageFile;
+        string imagePath = "img/cards/" + card.imageName;
+        cardImageComponent.texture = Resources.Load(imagePath) as Texture2D;
 
         if (card.isSafe)
         {
@@ -93,36 +84,31 @@ public class CardService
 
     public void safetyAction()
     {
-        GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
-        HeroService heroService = ServiceLocator.GetService<HeroService>();
+        HideCard();
+        ServiceLocator.GetService<GameFieldService>()
+            .setOpenField(currentCard.position);
 
-        hideCard();
-        gameFieldService.setOpenField(currentCard.position);
-
-        mainComponent.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
-        heroService.isInputBlocked = false;
-        mainComponent.isCardShowing = false;
+        Main.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
+        Main.isCardShowing = false;
     }
 
     public void dangerousAction()
     {
         SceneManager.LoadScene("End");
-        mainComponent.isCardShowing = false;
+
+        Main.isCardShowing = false;
     }
 
     public void backAction()
     {
-        HeroService heroService = ServiceLocator.GetService<HeroService>();
+        HideCard();
 
-        hideCard();
+        Main.isCardShowing = false;
 
-        mainComponent.isCardShowing = false;
-        heroService.isInputBlocked = false;
-
-        heroService.goBack();
+        ServiceLocator.GetService<HeroService>().goBack();
     }
 
-    public void hideCard()
+    public void HideCard()
     {
         cardObjectComponent.enabled = false;
         cardTextComponent.enabled = false;

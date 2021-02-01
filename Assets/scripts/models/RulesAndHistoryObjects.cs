@@ -24,6 +24,7 @@ class RulesAndHistoryObjects
     public static GameObject mainCanva;
     public static GameObject startMenu;
     public static GameObject bookSectionTitle;
+    public static GameObject rulHisTitle;
 
     public RulesAndHistoryObjects()
     {
@@ -42,6 +43,7 @@ class RulesAndHistoryObjects
         myBooksBtn = GameObject.Find("myBooksBtn");
         apiController = GameObject.Find("apiController");
         cardText = GameObject.Find("cardText");
+        rulHisTitle = GameObject.Find("rulHisTitle");
 
         mainCamera = GameObject.Find("mainCamera");
         startMenuElements = GameObject.Find("startMenuElements");

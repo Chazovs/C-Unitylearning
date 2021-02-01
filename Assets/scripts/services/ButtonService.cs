@@ -33,6 +33,8 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void setLangHandler(string lang)
     {
+        Settings.currentLang = lang;
+
         new Translator(lang);
         SceneManager.LoadScene("Rules");
     }
@@ -74,6 +76,7 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
         RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite 
             = Resources.Load<Sprite>("img/rules/1");
         RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
+        RulesAndHistoryObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("RULES_TITLE");
     }
 
     public static void startGameBtnHandler()
@@ -115,6 +118,7 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
         RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite 
             = Resources.Load<Sprite>("img/history/1");
         RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("HISTORY_1");
+        RulesAndHistoryObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("HISTORY_TITLE");
     }
 
     internal void newBooksBtnHandler()

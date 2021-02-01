@@ -23,7 +23,6 @@ public class RulesAndHistory : MonoBehaviour
         new RulesAndHistoryObjects();
 
         Langs.SetLangsForRules();
-
         
         RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
 

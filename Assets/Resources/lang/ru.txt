@@ -16,6 +16,7 @@ HISTORY_BTN=История
 HISTORY_TITLE=ИСТОРИЯ
 RULES_BTN=Правила
 RULES_TITLE=ПРАВИЛА
+NEW_HOME=Новый дом
 BOOKS_BTN=Книги
 MY_BOOKS_BTN=Мои книги
 START_BTN=Начать

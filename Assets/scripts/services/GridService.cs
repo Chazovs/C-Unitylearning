@@ -2,14 +2,7 @@
 
 public class GridService : MonoBehaviour
 {
-    private Main mainComponent;
-
-    public GridService()
-    {
-        mainComponent = GameObjects.main.GetComponent<Main>();
-    }
-
-    public void setGoal()
+    public void SetGoal()
     {
         Position goalPosition = new Position();
 
@@ -30,7 +23,7 @@ public class GridService : MonoBehaviour
             (GameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y)-Constants.step,
             GameObjects.endPoint.transform.position.z
             );
-        
-        mainComponent.goalPosition = goalPosition;
+
+        Main.goalPosition = goalPosition;
     }
 }

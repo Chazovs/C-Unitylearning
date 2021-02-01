@@ -1,17 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FieldTest
 {
-    private static GameObject main;
-    private static Main mainComponent;
-
     public static void showField()
     {
-        main = GameObject.Find("main");
-        mainComponent = main.GetComponent<Main>();
-
         string myX = "";
         for (int i = 0; i < Constants.fieldSize; i++) //строки
         {
@@ -22,7 +14,7 @@ public class FieldTest
                     /*myX += "x" + i + "y" + j + "*";*/
                     myX += "*";
                 }
-                else if (mainComponent.goalPosition.x == i + 1 && mainComponent.goalPosition.y == j + 1)
+                else if (Main.goalPosition.x == i + 1 && Main.goalPosition.y == j + 1)
                 {
                     /*myX += "x" + i + "y" + j + "O " ;*/
                     myX += "O " ;
@@ -31,7 +23,7 @@ public class FieldTest
                 {
                     /*myX += mainComponent.gameFields[i, j].isSafe ? "x" + i + "y" + j + "+ " : "x" + i + "y" + j + "- ";
                     myX += mainComponent.gameFields[i, j].isSafe ? "x" + i + "y" + j + "№"+ mainComponent.gameFields[i, j].id + "+ " : "x" + i + "y" + j + "- ";*/
-                    myX += mainComponent.gameFields[i, j].isSafe ? "+ " : "- ";
+                    myX += Main.gameFields[i, j].isSafe ? "+ " : "- ";
                 }
             }
 
@@ -39,6 +31,6 @@ public class FieldTest
         }
 
         Debug.Log(myX);
-        Debug.Log("goalPosition x: " + mainComponent.goalPosition.x + "y: " + mainComponent.goalPosition.y);
+        Debug.Log("goalPosition x: " + Main.goalPosition.x + "y: " + Main.goalPosition.y);
     }
 }

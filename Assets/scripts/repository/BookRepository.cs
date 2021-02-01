@@ -1,8 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public class BooksRepository : AbstactRepository
+public class BooksRepository
 {
 
     public List<Book> GetAvilableBooks()

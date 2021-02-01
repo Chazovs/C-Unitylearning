@@ -13,7 +13,7 @@
     /**
      * название файла изображения
      */
-    public string imageFileName;
+    public string imageName;
 
     /*
      * является ли поле безопасным

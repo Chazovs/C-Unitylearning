@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -13,9 +14,14 @@ public class ApiController : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator loadCards(Book book)
     {
-
-        /*var result  =  UnityWebRequest.Get(Constants.serverUrl + "books/" + book.code);*/
-        var www = UnityWebRequest.Get(Constants.serverUrl + "cards");
+        var www = UnityWebRequest.Get(Constants.serverUrl 
+            + "cards?book=" 
+            + book.code 
+            + "&lang=" 
+            + Settings.currentLang 
+            + "&key="
+            + Settings.apiKey
+            );
 
         yield return www.SendWebRequest();
 
@@ -29,10 +35,10 @@ public class ApiController : MonoBehaviour
         }
         else
         {
-            GetCardResponse response 
-                =  JsonUtility.FromJson<GetCardResponse>(www.downloadHandler.text);
-
-            if (response.cards == null)
+            Main.gameData
+                = JsonConvert.DeserializeObject<GetCardResponse>(www.downloadHandler.text);
+            
+            if (Main.gameData.cards == null)
             {
                 RulesAndHistoryObjects.startMenuElements.SetActive(false);
                 RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text
@@ -42,10 +48,6 @@ public class ApiController : MonoBehaviour
             }
             else
             {
-                Main.safetyCards = response.cards.safety;
-                Main.dangerousCards = response.cards.dangerous;
-                Main.book = response.book;
-
                 SceneManager.LoadScene("Game");
             }
         }

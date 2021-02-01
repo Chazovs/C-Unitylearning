@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="08e1bb73-586e-4707-a921-0c672b4d558e" name="reg.ru">
+        <fileTransfer rootFolder="/var/www/u1109711/data" accessType="SFTP" host="37.140.192.92" port="22" sshConfigId="05410e43-f3f8-4f11-8fc8-221c8ceb0666" sshConfig="u1109711@37.140.192.92:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

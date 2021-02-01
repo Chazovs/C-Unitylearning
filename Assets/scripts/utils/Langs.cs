@@ -17,7 +17,6 @@ public class Langs
         return value;
     }
 
-
     public static void SetLangsForRules()
     {
         RulesAndHistoryObjects.rulesButton.GetComponentInChildren<Text>().text 
@@ -34,6 +33,7 @@ public class Langs
             = GetMessge("NEW_BOOKS_BTN");
         RulesAndHistoryObjects.bookSectionTitle.GetComponentInChildren<Text>().text 
             = GetMessge("YOUR_BOOKS_TITLE");
+        RulesAndHistoryObjects.rulHisTitle.GetComponentInChildren<Text>().text 
+            = GetMessge("RULES_TITLE");
     }
-
 }
