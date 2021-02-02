@@ -19,6 +19,8 @@ public class Main : MonoBehaviour
 
         new GameObjects();
 
+        Langs.SetLangsForMain();
+
         _timer = new Timer();
 
         ServiceLocator.GetService<CardService>().HideCard();

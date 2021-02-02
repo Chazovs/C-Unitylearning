@@ -13,21 +13,18 @@ public class Menu : MonoBehaviour
     public static List<Book> myBooks;
     public static List<Book> newBooks;
 
-    private BookService bookService;
-    private ButtonService buttonService;
-
     private void Start()
     {
         Application.targetFrameRate = Settings.defaultFramRate;
 
         new MenuObjects();
 
-        Langs.SetLangsForRules();
+        Langs.SetLangsForMenu();
 
         MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
 
-        bookService = ServiceLocator.GetService<BookService>();
-        buttonService = ServiceLocator.GetService<ButtonService>();
+        ButtonService buttonService = ServiceLocator.GetService<ButtonService>();
+        BookService bookService = ServiceLocator.GetService<BookService>();
 
         myBooks = bookService.GetBooks(Constants.myBooksType);
         newBooks = bookService.GetBooks(Constants.newBooksType);

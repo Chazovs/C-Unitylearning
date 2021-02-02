@@ -75,6 +75,8 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void rulHisRulesButtonHandler()
     {
+        MenuObjects.mainCanva.SetActive(true);
+        MenuObjects.startMenu.SetActive(false);
         MenuObjects.rightButton.SetActive(true);
         MenuObjects.leftButton.SetActive(true);
         MenuObjects.rulHisTitle.SetActive(true);
@@ -121,6 +123,8 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void rulHisHistoryButtonHandler()
     {
+        MenuObjects.mainCanva.SetActive(true);
+        MenuObjects.startMenu.SetActive(false);
         MenuObjects.rightButton.SetActive(true);
         MenuObjects.leftButton.SetActive(true);
         MenuObjects.rulHisTitle.SetActive(true);
@@ -155,7 +159,8 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void rulHisSkipButtonHandler()
     {
-        BookService bookService = new BookService();
+        BookService bookService = ServiceLocator.GetService<BookService>();
+
         bookService.setCurrentMyBook();
         bookService.SetMyBooksDropDown();
 

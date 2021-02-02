@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Langs
@@ -15,7 +16,7 @@ public class Langs
         return value;
     }
 
-    public static void SetLangsForRules()
+    public static void SetLangsForMenu()
     {
         MenuObjects.rulesButton.GetComponentInChildren<Text>().text
             = GetMessge("RULES_BTN");
@@ -33,6 +34,14 @@ public class Langs
             = GetMessge("YOUR_BOOKS_TITLE");
         MenuObjects.rulHisTitle.GetComponentInChildren<Text>().text
             = GetMessge("RULES_TITLE");
+    }
+
+    internal static void SetLangsForMain()
+    {
+        GameObjects.backCardButton.GetComponentInChildren<Text>().text
+             = GetMessge("BACK");
+        GameObjects.goCardButton.GetComponentInChildren<Text>().text
+             = GetMessge("GO");
     }
 
     public static void SetLangsForEnd()
