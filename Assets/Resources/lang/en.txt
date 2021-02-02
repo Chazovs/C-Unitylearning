@@ -22,3 +22,6 @@ MY_BOOKS_BTN=My books
 START_BTN=Start
 NEW_BOOKS_BTN=New books
 YOUR_BOOKS_TITLE=Your books
+RESTART=Restart
+happyEnd=Кодама обрел новый дом
+sadEnd=Кодама исчез. В том месте, где в последний раз его видели, вырос белый гриб

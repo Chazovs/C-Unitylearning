@@ -8,26 +8,26 @@ public class VfxService
     {
         mainLogo = GameObject.Find("mainLogo");
 
-        if (PreviewScreen.goChangeLogo)
+        if (First.goChangeLogo)
         {
-            mainLogo.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, (float)PreviewScreen.logoTransparency / 100);
+            mainLogo.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, (float)First.logoTransparency / 100);
 
-            if (PreviewScreen.showLogoVector == 1 && PreviewScreen.logoTransparency >= 0)
-                PreviewScreen.logoTransparency -= 5;
+            if (First.showLogoVector == 1 && First.logoTransparency >= 0)
+                First.logoTransparency -= 5;
 
-            if (PreviewScreen.logoTransparency == 0 && PreviewScreen.showLogoVector == 1)
+            if (First.logoTransparency == 0 && First.showLogoVector == 1)
             {
-                PreviewScreen.showLogoVector = -1;
+                First.showLogoVector = -1;
                 mainLogo.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("img/logo/" + Settings.logoLang);
             }
 
-            if (PreviewScreen.showLogoVector == -1)
-                PreviewScreen.logoTransparency += 5;
+            if (First.showLogoVector == -1)
+                First.logoTransparency += 5;
 
-            if (PreviewScreen.logoTransparency == 100 && PreviewScreen.showLogoVector == -1)
+            if (First.logoTransparency == 100 && First.showLogoVector == -1)
             {
-                PreviewScreen.goChangeLogo = false;
-                PreviewScreen.showLogoVector = 1;
+                First.goChangeLogo = false;
+                First.showLogoVector = 1;
             }
         }
     }

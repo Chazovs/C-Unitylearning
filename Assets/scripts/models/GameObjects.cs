@@ -13,6 +13,7 @@ public class GameObjects : MonoBehaviour
     public static GameObject backCardButton;
     public static GameObject main;
     public static GameObject openField;
+    public static GameObject apiController;
 
     public GameObjects()
     {
@@ -27,5 +28,6 @@ public class GameObjects : MonoBehaviour
         backCardButton = GameObject.Find("backCardButton");
         main = GameObject.Find("main");
         openField = GameObject.Find("openField");
+        apiController = GameObject.Find("apiController");
     }
 }

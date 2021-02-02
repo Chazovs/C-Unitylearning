@@ -9,7 +9,7 @@ public class BookService
     {
         BooksRepository repository = new BooksRepository();
         List<Book> books = repository.GetAvilableBooks();
-        Dropdown dropDown = RulesAndHistoryObjects.bookDropdown.GetComponent<Dropdown>();
+        Dropdown dropDown = MenuObjects.bookDropdown.GetComponent<Dropdown>();
 
         dropDown.options.Clear();
 
@@ -26,7 +26,7 @@ public class BookService
 
     private void ChangeCurrentMyBook(Dropdown dropDown)
     {
-        RulesAndHistory.currentMyBook = dropDown.value;
+        Menu.currentMyBook = dropDown.value;
         setCurrentMyBook();
     }
 
@@ -51,27 +51,27 @@ public class BookService
 
     public void setCurrentMyBook()
     {
-        int myBookIndex = RulesAndHistory.currentMyBook;
+        int myBookIndex = Menu.currentMyBook;
 
-        Book myBook = RulesAndHistory.myBooks[myBookIndex];
+        Book myBook = Menu.myBooks[myBookIndex];
 
         byte[] imageBytes = Convert.FromBase64String(myBook.qrCode);
         Texture2D tex = new Texture2D(370, 370);
 
         tex.LoadImage(imageBytes);
         Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), Vector2.zero);
-        RulesAndHistoryObjects.qrCodeImage.GetComponent<Image>().sprite = sprite;
+        MenuObjects.qrCodeImage.GetComponent<Image>().sprite = sprite;
 
         string url = String.Concat(Constants.serverUrl, myBook.pdfUri);
 
-        RulesAndHistoryObjects.magicBookUrl.GetComponentInChildren<Text>().text = url;
+        MenuObjects.magicBookUrl.GetComponentInChildren<Text>().text = url;
 
         //magicBookUrl
-        RulesAndHistoryObjects.magicBookUrl.GetComponent<Button>()
+        MenuObjects.magicBookUrl.GetComponent<Button>()
             .onClick.AddListener(() => ButtonService.openMagicBookUrl(url));
 
         //startGameBtn
-        RulesAndHistoryObjects.startGameBtn.GetComponent<Button>()
+        MenuObjects.startGameBtn.GetComponent<Button>()
             .onClick.AddListener(() => ButtonService.startGameBtnHandler());
     }
 }

@@ -31,9 +31,8 @@ public class CardService
             && Main.heroPosition.onTheWay == false
             )
         {
-            SceneManager.LoadScene("End");
-
-            return;
+            Settings.endType = "happyEnd";
+            SceneManager.LoadScene("Menu");
         }
 
         Card card = Main.gameFields[(int)Main.heroPosition.x - 1, (int)Main.heroPosition.y - 1];
@@ -65,8 +64,8 @@ public class CardService
 
         cardTextComponent.text = card.text;
 
-        string imagePath = "img/cards/" + card.imageName;
-        cardImageComponent.texture = Resources.Load(imagePath) as Texture2D;
+        GameObjects.apiController.GetComponent<ApiController>()
+            .loadCardImageAction(card.imageName);
 
         if (card.isSafe)
         {
@@ -94,9 +93,8 @@ public class CardService
 
     public void dangerousAction()
     {
-        SceneManager.LoadScene("End");
-
-        Main.isCardShowing = false;
+        Settings.endType = "sadEnd";
+        SceneManager.LoadScene("Menu");
     }
 
     public void backAction()

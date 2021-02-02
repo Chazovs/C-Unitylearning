@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class PreviewScreen : MonoBehaviour
+public class First : MonoBehaviour
 {
 
    public static bool goChangeLogo = false;

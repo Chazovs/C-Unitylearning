@@ -21,7 +21,8 @@ public class Timer : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("End");
+            Settings.endType = "sadEnd";
+            SceneManager.LoadScene("Menu");
         }
     }
 }

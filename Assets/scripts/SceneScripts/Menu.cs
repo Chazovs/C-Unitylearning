@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RulesAndHistory : MonoBehaviour
+public class Menu : MonoBehaviour
 {
     public string topic = "rules";
     public int currentSlide = 1;
@@ -12,19 +12,19 @@ public class RulesAndHistory : MonoBehaviour
 
     public static List<Book> myBooks;
     public static List<Book> newBooks;
-    
+
     private BookService bookService;
     private ButtonService buttonService;
 
-    void Start()
+    private void Start()
     {
         Application.targetFrameRate = Settings.defaultFramRate;
 
-        new RulesAndHistoryObjects();
+        new MenuObjects();
 
         Langs.SetLangsForRules();
-        
-        RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
+
+        MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
 
         bookService = ServiceLocator.GetService<BookService>();
         buttonService = ServiceLocator.GetService<ButtonService>();
@@ -32,34 +32,46 @@ public class RulesAndHistory : MonoBehaviour
         myBooks = bookService.GetBooks(Constants.myBooksType);
         newBooks = bookService.GetBooks(Constants.newBooksType);
 
-        RulesAndHistoryObjects.startMenu.SetActive(false);
+        MenuObjects.startMenu.SetActive(false);
+
+        if (Settings.endType != "")
+        {
+            MenuObjects.rightButton.SetActive(false);
+            MenuObjects.leftButton.SetActive(false);
+            MenuObjects.rulHisTitle.SetActive(false);
+
+            MenuObjects.cardText.GetComponent<Text>().text
+                = Langs.GetMessge(Settings.endType);
+            MenuObjects.rulHisImage.GetComponent<Image>().sprite
+                = Resources.Load<Sprite>("img/endimg/" + Settings.endType);
+        }
 
         //leftButton
-        RulesAndHistoryObjects.leftButton.GetComponent<Button>()
+        MenuObjects.leftButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisLeftButtonHandler(topic, currentSlide));
 
         //rightButton
-        RulesAndHistoryObjects.rightButton.GetComponent<Button>()
+        MenuObjects.rightButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisRightButtonHandler(topic, currentSlide));
 
         //rulesButton
-        RulesAndHistoryObjects.rulesButton.GetComponent<Button>()
+        MenuObjects.rulesButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisRulesButtonHandler());
 
         //historyButton
-        RulesAndHistoryObjects.historyButton.GetComponent<Button>()
+        MenuObjects.historyButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisHistoryButtonHandler());
 
         //skipButton
-        RulesAndHistoryObjects.skipButton.GetComponent<Button>()
+        MenuObjects.skipButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler());
 
         //myBooksBtn
-        RulesAndHistoryObjects.myBooksBtn.GetComponent<Button>()
+        MenuObjects.myBooksBtn.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.myBooksBtnHandler());
 
         //newBooksBtn
-        RulesAndHistoryObjects.newBooksBtn.GetComponent<Button>()
+        MenuObjects.newBooksBtn.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.newBooksBtnHandler());
     }
 }

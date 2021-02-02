@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-class RulesAndHistoryObjects
+class MenuObjects
 {
     public static GameObject rightButton;
     public static GameObject leftButton;
@@ -26,7 +26,7 @@ class RulesAndHistoryObjects
     public static GameObject bookSectionTitle;
     public static GameObject rulHisTitle;
 
-    public RulesAndHistoryObjects()
+    public MenuObjects()
     {
         rightButton = GameObject.Find("rightButton");
         leftButton = GameObject.Find("leftButton");

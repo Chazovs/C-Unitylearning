@@ -25,10 +25,15 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
             nextSlideText = "HISTORY_" + nextSlide.ToString();
         }
 
-        GameObject.Find("mainCamera").GetComponent<RulesAndHistory>().currentSlide = nextSlide;
-        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
+        GameObject.Find("mainCamera").GetComponent<Menu>().currentSlide = nextSlide;
+        MenuObjects.rulHisImage.GetComponent<Image>().sprite = Resources.Load<Sprite>("img/" +topic + "/" + nextSlide.ToString());
 
-        RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge(nextSlideText);
+        MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge(nextSlideText);
+    }
+
+    internal void restartHandler()
+    {
+        SceneManager.LoadScene("Game");
     }
 
     internal void setLangHandler(string lang)
@@ -36,7 +41,7 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
         Settings.currentLang = lang;
 
         new Translator(lang);
-        SceneManager.LoadScene("Rules");
+        SceneManager.LoadScene("Menu");
     }
 
     internal void rulHisRightButtonHandler(string topic, int currentSlide)
@@ -56,11 +61,11 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
             nextSlideText = "HISTORY_" + nextSlide.ToString();
         }
 
-        RulesAndHistoryObjects.mainCamera.GetComponent<RulesAndHistory>().currentSlide = nextSlide;
-        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite 
+        MenuObjects.mainCamera.GetComponent<Menu>().currentSlide = nextSlide;
+        MenuObjects.rulHisImage.GetComponent<Image>().sprite 
             = Resources.Load<Sprite>("img/" + topic + "/" + nextSlide.ToString());
 
-        RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge(nextSlideText);
+        MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge(nextSlideText);
     }
 
     internal static void openMagicBookUrl(string url)
@@ -70,21 +75,25 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void rulHisRulesButtonHandler()
     {
-        RulesAndHistory component = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
+        MenuObjects.rightButton.SetActive(true);
+        MenuObjects.leftButton.SetActive(true);
+        MenuObjects.rulHisTitle.SetActive(true);
+
+        Menu component = GameObject.Find("mainCamera").GetComponent<Menu>();
         component.currentSlide = 1;
         component.topic = "rules";
-        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite 
+        MenuObjects.rulHisImage.GetComponent<Image>().sprite 
             = Resources.Load<Sprite>("img/rules/1");
-        RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
-        RulesAndHistoryObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("RULES_TITLE");
+        MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("RULES_1");
+        MenuObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("RULES_TITLE");
     }
 
     public static void startGameBtnHandler()
     {
-        int index = RulesAndHistory.currentMyBook;
-        Book book = RulesAndHistory.myBooks[index];
+        int index = Menu.currentMyBook;
+        Book book = Menu.myBooks[index];
 
-        RulesAndHistoryObjects
+        MenuObjects
             .apiController
             .GetComponent<ApiController>()
             .loadCardsAction(Constants.defaultBook);
@@ -92,18 +101,18 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void myBooksBtnHandler()
     {
-        if (RulesAndHistory.myBooks.Count == 0)
+        if (Menu.myBooks.Count == 0)
         {
-            RulesAndHistoryObjects.startMenuElements.SetActive(false);
-            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text 
+            MenuObjects.startMenuElements.SetActive(false);
+            MenuObjects.exceptionMsg.GetComponent<Text>().text 
                 = Langs.GetMessge("NO_MY_BOOKS");
-            RulesAndHistoryObjects.exceptionMsg.SetActive(true);
+            MenuObjects.exceptionMsg.SetActive(true);
         }
 
-        if (RulesAndHistory.myBooks.Count > 0)
+        if (Menu.myBooks.Count > 0)
         {
-            RulesAndHistoryObjects.startMenuElements.SetActive(true);
-            RulesAndHistoryObjects.exceptionMsg.SetActive(false);
+            MenuObjects.startMenuElements.SetActive(true);
+            MenuObjects.exceptionMsg.SetActive(false);
         }
 
         BookService bookService = new BookService();
@@ -112,31 +121,35 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
     internal void rulHisHistoryButtonHandler()
     {
-        RulesAndHistory component = GameObject.Find("mainCamera").GetComponent<RulesAndHistory>();
+        MenuObjects.rightButton.SetActive(true);
+        MenuObjects.leftButton.SetActive(true);
+        MenuObjects.rulHisTitle.SetActive(true);
+
+        Menu component = GameObject.Find("mainCamera").GetComponent<Menu>();
         component.currentSlide = 1;
         component.topic = "history";
-        RulesAndHistoryObjects.rulHisImage.GetComponent<Image>().sprite 
+        MenuObjects.rulHisImage.GetComponent<Image>().sprite 
             = Resources.Load<Sprite>("img/history/1");
-        RulesAndHistoryObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("HISTORY_1");
-        RulesAndHistoryObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("HISTORY_TITLE");
+        MenuObjects.cardText.GetComponent<Text>().text = Langs.GetMessge("HISTORY_1");
+        MenuObjects.rulHisTitle.GetComponent<Text>().text = Langs.GetMessge("HISTORY_TITLE");
     }
 
     internal void newBooksBtnHandler()
     {
-        if (RulesAndHistory.newBooks.Count == 0)
+        if (Menu.newBooks.Count == 0)
         {
-            RulesAndHistoryObjects.startMenuElements.SetActive(false);
+            MenuObjects.startMenuElements.SetActive(false);
 
-            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text 
+            MenuObjects.exceptionMsg.GetComponent<Text>().text 
                 = Langs.GetMessge("NO_NEW_BOOKS");
 
-            RulesAndHistoryObjects.exceptionMsg.SetActive(true);
+            MenuObjects.exceptionMsg.SetActive(true);
         }
 
-        if (RulesAndHistory.newBooks.Count > 0)
+        if (Menu.newBooks.Count > 0)
         {
-            RulesAndHistoryObjects.startMenuElements.SetActive(true);
-            RulesAndHistoryObjects.exceptionMsg.SetActive(false);
+            MenuObjects.startMenuElements.SetActive(true);
+            MenuObjects.exceptionMsg.SetActive(false);
         }
     }
 
@@ -146,8 +159,8 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
         bookService.setCurrentMyBook();
         bookService.SetMyBooksDropDown();
 
-        RulesAndHistoryObjects.mainCanva.SetActive(false);
-        RulesAndHistoryObjects.startMenu.SetActive(true);
+        MenuObjects.mainCanva.SetActive(false);
+        MenuObjects.startMenu.SetActive(true);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -155,13 +168,13 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
         if (Settings.logoLang == "ru" && name == "english")
         {
             Settings.logoLang = "en";
-            PreviewScreen.goChangeLogo = true;
+            First.goChangeLogo = true;
         }
 
         if (Settings.logoLang == "en" && name == "russian")
         {
             Settings.logoLang = "ru";
-            PreviewScreen.goChangeLogo = true;
+            First.goChangeLogo = true;
         }
     }
 }

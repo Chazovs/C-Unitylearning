@@ -11,7 +11,7 @@ public class ApiController : MonoBehaviour
     {
         StartCoroutine(loadCards(book));
     }
-    // Start is called before the first frame update
+    
     IEnumerator loadCards(Book book)
     {
         var www = UnityWebRequest.Get(Constants.serverUrl 
@@ -27,8 +27,8 @@ public class ApiController : MonoBehaviour
 
         if (www.isNetworkError || www.isHttpError)
         {
-            RulesAndHistoryObjects.startMenuElements.SetActive(false);
-            RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text
+            MenuObjects.startMenuElements.SetActive(false);
+            MenuObjects.exceptionMsg.GetComponent<Text>().text
                 = Langs.GetMessge("NETWORK_ERROR");
 
             yield break;
@@ -40,8 +40,8 @@ public class ApiController : MonoBehaviour
             
             if (Main.gameData.cards == null)
             {
-                RulesAndHistoryObjects.startMenuElements.SetActive(false);
-                RulesAndHistoryObjects.exceptionMsg.GetComponent<Text>().text
+                MenuObjects.startMenuElements.SetActive(false);
+                MenuObjects.exceptionMsg.GetComponent<Text>().text
                     = Langs.GetMessge("NETWORK_ERROR");
 
                 yield break;
@@ -50,6 +50,33 @@ public class ApiController : MonoBehaviour
             {
                 SceneManager.LoadScene("Game");
             }
+        }
+    }
+
+    internal void loadCardImageAction(string imageName)
+    {
+        StartCoroutine(loadCardsImage(imageName));
+    }
+    IEnumerator loadCardsImage(string imageName)
+    {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(Constants.serverUrl
+            + "res/img/cards/"
+            + imageName
+            + ".jpg"
+            );
+
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+            yield break;
+        }
+        else
+        {
+            GameObjects.cardImage.GetComponent<RawImage>().texture 
+                = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            yield break;
         }
     }
 }
