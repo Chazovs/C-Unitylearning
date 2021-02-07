@@ -15,6 +15,8 @@ public class Menu : MonoBehaviour
 
     private void Start()
     {
+        ServiceLocator.Reset();
+
         Application.targetFrameRate = Settings.defaultFramRate;
 
         new MenuObjects();

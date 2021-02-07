@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public static class Constants 
 {
-    //версия игры
-    internal static string gameVersion = "100";
-
     //шаг сетки
     public const float step = 16;
 
@@ -18,13 +15,10 @@ public static class Constants
     public const int fieldSize = 10;
 
     //время игры в секундах
-    internal static float totalTime = 200f;
+    internal const float totalTime = 200f;
     
     //позиция по Z открытого поля
-    internal static float openedFieldZ = -3;
-
-    //стартовая позиция героя
-    internal static Position startPosition = new Position(){ x = 1, y = 10 };
+    internal const float openedFieldZ = -3;
 
     //соседние позиции
     internal static List<Position> adjacentPositions = new List<Position> {
@@ -44,7 +38,7 @@ public static class Constants
     //последний  слайд с историей
     internal static int lastHistorySlide = 6;
 
-    internal static string serverUrl = "http://g4v.ru/";
+    internal static string serverUrl = "http://server.g4v.ru/";
 
     internal static Book defaultBook = new Book() { 
         name = Langs.GetMessge("NEW_HOME"),

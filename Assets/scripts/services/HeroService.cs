@@ -2,13 +2,12 @@
 
 public class HeroService : MonoBehaviour
 {
+    public Position heroPosition = new Position() { x = 1, y = 10, onTheWay = false };
+    public Position newPosition = new Position();
+    public Position previousPosition = new Position();
     private Vector2 _movementDirection;
-
     private Vector3 _destination = new Vector3();
-
     private KeyInput keyInput = new KeyInput();
-
-
 
     public HeroService()
     {
@@ -27,33 +26,33 @@ public class HeroService : MonoBehaviour
 
         cardService.ShowController();
 
-        if (Main.isCardShowing) return;
+        if (cardService.isCardShowing) return;
 
         keyInput.x = keyInput.y = 0;
 
         //если герой не движется, то можно принимать значение ввода
-        if (!Main.heroPosition.onTheWay) {
+        if (!heroPosition.onTheWay) {
             keyInput.x = Input.GetAxisRaw("Horizontal");
             keyInput.y = Input.GetAxisRaw("Vertical");
         };
 
         if(keyInput.x != 0 || keyInput.y != 0)
         {
-            Main.heroPosition.onTheWay = true;
+            heroPosition.onTheWay = true;
 
-            Main.newPosition = new Position
+            newPosition = new Position
             {
-                x = Main.heroPosition.x + keyInput.x,
-                y = Main.heroPosition.y + keyInput.y
+                x = heroPosition.x + keyInput.x,
+                y = heroPosition.y + keyInput.y
             };
 
-            bool canMove = Main.newPosition.x > 0
-            && Main.newPosition.x < 11
-            && Main.newPosition.y > 0
-            && Main.newPosition.y < 11;
+            bool canMove = newPosition.x > 0
+            && newPosition.x < 11
+            && newPosition.y > 0
+            && newPosition.y < 11;
 
             if (!canMove) {
-                Main.heroPosition.onTheWay = false;
+                heroPosition.onTheWay = false;
                 return;
             }
 
@@ -66,18 +65,18 @@ public class HeroService : MonoBehaviour
 
         //если туда можно двигаться и если мы еще не там - идем туда
         if (_destination != GameObjects.hero.transform.position) {
-            Main.heroPosition.onTheWay = true;
+            heroPosition.onTheWay = true;
             GameObjects.hero.transform.position = Vector3.MoveTowards(GameObjects.hero.transform.position, _destination, Constants.speed * Time.deltaTime);
 
             return;
         }
 
         //если мы пришли
-        if (Main.heroPosition.onTheWay && GameObjects.hero.transform.position == _destination)
+        if (heroPosition.onTheWay && GameObjects.hero.transform.position == _destination)
         {
-            Main.previousPosition = Main.heroPosition;
-            Main.heroPosition = Main.newPosition;
-            Main.heroPosition.onTheWay = false;
+            previousPosition =heroPosition;
+            heroPosition = newPosition;
+            heroPosition.onTheWay = false;
 
             return;
         }
@@ -88,8 +87,8 @@ public class HeroService : MonoBehaviour
         if (_destination == GameObjects.hero.transform.position)
         {
             _movementDirection.Set(
-            (Main.previousPosition.x - Main.heroPosition.x) * Constants.step,
-            (Main.previousPosition.y - Main.heroPosition.y) * Constants.step
+            (previousPosition.x - heroPosition.x) * Constants.step,
+            (previousPosition.y - heroPosition.y) * Constants.step
             );
 
             _destination = GameObjects.hero.transform.position + (Vector3)_movementDirection;
@@ -101,8 +100,8 @@ public class HeroService : MonoBehaviour
                 );
         
             _movementDirection.Set(
-            (Main.previousPosition.x - Main.heroPosition.x) * Constants.step,
-            (Main.previousPosition.y - Main.heroPosition.y) * Constants.step
+            (previousPosition.x - heroPosition.x) * Constants.step,
+            (previousPosition.y - heroPosition.y) * Constants.step
             );
 
             _destination = GameObjects.hero.transform.position + (Vector3)_movementDirection;
@@ -113,13 +112,13 @@ public class HeroService : MonoBehaviour
                 Constants.speed * Time.deltaTime
                 );
 
-            Main.heroPosition.onTheWay = false;
-            Main.heroPosition.x = Main.previousPosition.x;
-            Main.heroPosition.y = Main.previousPosition.y;
+            heroPosition.onTheWay = false;
+            heroPosition.x = previousPosition.x;
+            heroPosition.y = previousPosition.y;
         }
         else
         {
-            Main.heroPosition.onTheWay = true;
+            heroPosition.onTheWay = true;
         }
     }
 }

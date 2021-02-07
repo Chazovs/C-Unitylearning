@@ -24,4 +24,9 @@ public class ServiceLocator
 
         throw new Exception("Сервис не найден");
     }
+
+    internal static void Reset()
+    {
+        services = new Dictionary<string, object>();
+    }
 }

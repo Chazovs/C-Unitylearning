@@ -1,34 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameFieldService : MonoBehaviour
 {
+
+    public GetCardResponse gameData;
+    public Position goalPosition = new Position();
+    public Card[,] gameFields = new Card[Constants.fieldSize, Constants.fieldSize];
     private int safeFieldsIndex;
-    
+
     /*
     * <summary>Основной метод - заполняет все поля на игровом поле</summary>
     */
     public void FillGameFields()
     {
-        Main.gameData.cards.danger
-           = Shuffler.listShuffler(Main.gameData.cards.danger);
-
-        Main.gameData.cards.safety
-           = Shuffler.listShuffler(Main.gameData.cards.safety);
+        gameData.cards.danger = Shuffler.listShuffler(gameData.cards.danger);
+        gameData.cards.safety = Shuffler.listShuffler(gameData.cards.safety);
 
         SetGoalAndStartFields();
         SetDangerousFields();
         SetSafetyCardsInField();
     }
+    public void SetGoal()
+    {
+        float goalZone = Random.Range(0, 2);
+
+        if (goalZone == 0)
+        {
+            goalPosition.x = Random.Range(5, 11);
+            goalPosition.y = Random.Range(1, 11);
+        }
+
+        if (goalZone == 1)
+        {
+            goalPosition.x = Random.Range(1, 11);
+            goalPosition.y = Random.Range(1, 7);
+        }
+
+        GameObjects.endPoint.transform.position = new Vector3(
+            (GameObjects.endPoint.transform.position.x + Constants.step / 2) + (Constants.step * goalPosition.x) - Constants.step,
+            (GameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y) - Constants.step,
+            GameObjects.endPoint.transform.position.z
+            );
+
+    }
 
     private void SetGoalAndStartFields()
     {
-        Card goal = new Card() { isWin = true, position = Main.goalPosition };
-        Main.gameFields[(int)Main.goalPosition.x-1, (int)Main.goalPosition.y-1] = goal;
+        HeroService heroService = ServiceLocator.GetService<HeroService>();
 
-        Card start = new Card() { isStart = true, position = Main.heroPosition };
-        Main.gameFields[(int)Main.heroPosition.x-1, (int)Main.heroPosition.y-1] = start;
+        Card goal = new Card() { isWin = true, position = goalPosition };
+        gameFields[(int)goalPosition.x-1, (int)goalPosition.y-1] = goal;
+
+        Card start = new Card() { isStart = true, position = heroService.heroPosition };
+        gameFields[(int)heroService.heroPosition.x - 1, (int)heroService.heroPosition.y - 1] = start;
     }
 
     public void SetSafetyCardsInField()
@@ -39,7 +66,7 @@ public class GameFieldService : MonoBehaviour
 
         Stack<Card> way = new Stack<Card>();
 
-        Card current = Main.gameFields[(int)Main.goalPosition.x - 1, (int)Main.goalPosition.y - 1];
+        Card current = gameFields[(int)goalPosition.x - 1, (int)goalPosition.y - 1];
 
         way.Push(current);
 
@@ -55,20 +82,20 @@ public class GameFieldService : MonoBehaviour
             int rndIndex = rnd.Next(0, availableCards.Count);
             Card directionCard = availableCards[rndIndex];
 
-            if(directionCard.position.x == Constants.startPosition.x 
-                && directionCard.position.y == Constants.startPosition.y
+            if(directionCard.position.x == Settings.startPosition.x 
+                && directionCard.position.y == Settings.startPosition.y
                 )
             {
                 break;
             }
 
-            Main.gameData.cards.safety[safeFieldsIndex].position = directionCard.position;
-            Main.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1] 
-                = Main.gameData.cards.safety[safeFieldsIndex];
+            gameData.cards.safety[safeFieldsIndex].position = directionCard.position;
+            gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1] 
+                = gameData.cards.safety[safeFieldsIndex];
             
             safeFieldsIndex++;
 
-            current = Main.gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1];
+            current = gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1];
 
             way.Push(current);
 
@@ -109,7 +136,7 @@ public class GameFieldService : MonoBehaviour
 
             if ((current.x == x && current.y == y) || x > 10 || x < 1 || y >10 || y < 1) continue;
 
-            Card checkingCard = Main.gameFields[(int)x - 1, (int)y - 1];
+            Card checkingCard = gameFields[(int)x - 1, (int)y - 1];
 
             if (checkingCard.isWin || checkingCard.isSafe) return true;
         }
@@ -124,7 +151,7 @@ public class GameFieldService : MonoBehaviour
             && current.y + distanse.y < 11
             && current.y + distanse.y > 0
             ) {
-            return Main.gameFields[(int)current.x + (int)distanse.x - 1, (int) current.y + (int)distanse.y - 1];
+            return gameFields[(int)current.x + (int)distanse.x - 1, (int) current.y + (int)distanse.y - 1];
         }
 
         return null;
@@ -151,21 +178,21 @@ public class GameFieldService : MonoBehaviour
         {
             for (int j = 0; j < Constants.fieldSize; j++)
             {
-                if (Main.gameFields[i, j] == null)
+                if (gameFields[i, j] == null)
                 {
-                    if (Main.gameFields[i, j] != null 
-                        && (Main.gameFields[i, j].isWin 
-                        || Main.gameFields[i, j].isStart)) continue;
+                    if (gameFields[i, j] != null 
+                        && (gameFields[i, j].isWin 
+                        || gameFields[i, j].isStart)) continue;
 
-                    Main.gameFields[i, j] 
-                        = Main.gameData.cards.danger[dangerousFieldsIndex];
-                    Main.gameFields[i, j].position 
+                    gameFields[i, j] 
+                        = gameData.cards.danger[dangerousFieldsIndex];
+                    gameFields[i, j].position 
                         = new Position() { x = i + 1, y = j + 1 };
 
                     dangerousFieldsIndex++;
 
                     dangerousFieldsIndex 
-                        = dangerousFieldsIndex > Main.gameData.cards.danger.Count - 1 ? 0 : dangerousFieldsIndex;
+                        = dangerousFieldsIndex > gameData.cards.danger.Count - 1 ? 0 : dangerousFieldsIndex;
                 }
             }
         }

@@ -35,10 +35,12 @@ public class ApiController : MonoBehaviour
         }
         else
         {
-            Main.gameData
+            GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
+
+            gameFieldService.gameData
                 = JsonConvert.DeserializeObject<GetCardResponse>(www.downloadHandler.text);
             
-            if (Main.gameData.cards == null)
+            if (gameFieldService.gameData.cards == null)
             {
                 MenuObjects.startMenuElements.SetActive(false);
                 MenuObjects.exceptionMsg.GetComponent<Text>().text
@@ -60,7 +62,7 @@ public class ApiController : MonoBehaviour
     IEnumerator loadCardsImage(string imageName)
     {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(Constants.serverUrl
-            + "res/img/cards/"
+            + "images/cards/"
             + imageName
             + ".jpg"
             );

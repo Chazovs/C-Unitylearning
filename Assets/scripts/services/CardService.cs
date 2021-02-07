@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class CardService 
 {
+    public bool isCardShowing = false;
+
     SpriteRenderer cardObjectComponent;
     Text cardTextComponent;
     RawImage cardImageComponent;
@@ -24,31 +26,32 @@ public class CardService
     internal void ShowController()
     {
         HeroService heroService = ServiceLocator.GetService<HeroService>();
+        GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
 
         //если герой пришел к цели
-        if (Main.heroPosition.x == Main.goalPosition.x
-            && Main.heroPosition.y == Main.goalPosition.y
-            && Main.heroPosition.onTheWay == false
+        if (heroService.heroPosition.x == gameFieldService.goalPosition.x
+            && heroService.heroPosition.y == gameFieldService.goalPosition.y
+            && heroService.heroPosition.onTheWay == false
             )
         {
             Settings.endType = "happyEnd";
             SceneManager.LoadScene("Menu");
         }
 
-        Card card = Main.gameFields[(int)Main.heroPosition.x - 1, (int)Main.heroPosition.y - 1];
+        Card card = gameFieldService.gameFields[(int)heroService.heroPosition.x - 1, (int)heroService.heroPosition.y - 1];
 
-        if (Main.heroPosition.onTheWay
-            || Main.isCardShowing
+        if (heroService.heroPosition.onTheWay
+            || isCardShowing
             || card.isWin
             || card.isOpen
-            || Main.heroPosition.x == 1 && Main.heroPosition.y == Constants.fieldSize
+            || heroService.heroPosition.x == 1 && heroService.heroPosition.y == Constants.fieldSize
             )
         {
             return;
         }
 
         showCard(ref card);
-        Main.isCardShowing = true;
+        isCardShowing = true;
     }
 
     public void showCard(ref Card card)
@@ -84,11 +87,11 @@ public class CardService
     public void safetyAction()
     {
         HideCard();
-        ServiceLocator.GetService<GameFieldService>()
-            .setOpenField(currentCard.position);
+        GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
+        gameFieldService.setOpenField(currentCard.position);
 
-        Main.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
-        Main.isCardShowing = false;
+        gameFieldService.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
+        isCardShowing = false;
     }
 
     public void dangerousAction()
@@ -101,7 +104,7 @@ public class CardService
     {
         HideCard();
 
-        Main.isCardShowing = false;
+        isCardShowing = false;
 
         ServiceLocator.GetService<HeroService>().goBack();
     }
