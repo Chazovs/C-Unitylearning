@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameObjects : MonoBehaviour
+public class GameObjects
 {
     public static GameObject grid;
     public static GameObject endPoint;

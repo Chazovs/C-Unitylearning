@@ -7,11 +7,13 @@ using UnityEngine.UI;
 
 public class ApiController : MonoBehaviour
 {
+    [System.Obsolete]
     internal void loadCardsAction(Book book)
     {
         StartCoroutine(loadCards(book));
     }
-    
+
+    [System.Obsolete]
     IEnumerator loadCards(Book book)
     {
         var www = UnityWebRequest.Get(Constants.serverUrl 
@@ -24,6 +26,7 @@ public class ApiController : MonoBehaviour
             );
 
         yield return www.SendWebRequest();
+
 
         if (www.isNetworkError || www.isHttpError)
         {

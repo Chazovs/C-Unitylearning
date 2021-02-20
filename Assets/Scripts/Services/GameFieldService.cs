@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class GameFieldService : MonoBehaviour
+public class GameFieldService
 {
 
     public GetCardResponse gameData;
@@ -145,7 +145,7 @@ public class GameFieldService : MonoBehaviour
 
     public void setOpenField(Position openedField)
     {
-         GameObject instance = Instantiate(GameObjects.openField);
+         GameObject instance = UnityEngine.Object.Instantiate(GameObjects.openField);
          instance.transform.position = new Vector3(
             instance.transform.position.x + (Constants.step / 2) + (Constants.step * openedField.x ) - Constants.step,
             instance.transform.position.y + (Constants.step / 2) + (Constants.step * openedField.y) - Constants.step,

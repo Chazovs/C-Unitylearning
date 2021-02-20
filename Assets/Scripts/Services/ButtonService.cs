@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ButtonService : MonoBehaviour, IPointerEnterHandler
+public class ButtonService 
 {
     public void StartGame()
     {
@@ -166,20 +166,5 @@ public class ButtonService : MonoBehaviour, IPointerEnterHandler
 
         MenuObjects.mainCanva.SetActive(false);
         MenuObjects.startMenu.SetActive(true);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (Settings.logoLang == "ru" && name == "english")
-        {
-            Settings.logoLang = "en";
-            First.goChangeLogo = true;
-        }
-
-        if (Settings.logoLang == "en" && name == "russian")
-        {
-            Settings.logoLang = "ru";
-            First.goChangeLogo = true;
-        }
     }
 }

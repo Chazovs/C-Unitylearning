@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class HeroService : MonoBehaviour
+public class HeroService
 {
     public Position heroPosition = new Position();
     public Position newPosition = new Position();

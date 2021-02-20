@@ -9,6 +9,8 @@ public class Main : MonoBehaviour
     {
         Application.targetFrameRate = Settings.defaultFramRate;
 
+        Destroy(GameObject.Find("splashMusic"));
+
         new GameObjects();
 
         Langs.SetLangsForMain();
