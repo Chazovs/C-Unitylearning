@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Rand = UnityEngine.Random;
 
 public class GameFieldService
 {
@@ -18,9 +17,7 @@ public class GameFieldService
     {
         gameData.cards.danger = Shuffler.listShuffler(gameData.cards.danger);
         gameData.cards.safety = Shuffler.listShuffler(gameData.cards.safety);
-
-        SetDangerousFields();
-        SetStartFields();
+        gameFields = SetDangerousFields(gameData.cards.danger);
         CreateMaze();
     }
 
@@ -31,34 +28,32 @@ public class GameFieldService
             (GameObjects.endPoint.transform.position.y + Constants.step / 2) + (Constants.step * goalPosition.y) - Constants.step,
             GameObjects.endPoint.transform.position.z
             );
-
     }
 
-    private void SetStartFields()
+    private Card SetStartFields(Position heroPosition)
     {
-        HeroService heroService = ServiceLocator.GetService<HeroService>();
-
-        Card start = new Card() { isStart = true, position = heroService.heroPosition };
-        gameFields[(int)heroService.heroPosition.x - 1, (int)heroService.heroPosition.y - 1] = start;
+        return gameFields[heroPosition.arX(), heroPosition.arY()] 
+            = new Card() { isStart = true, position = heroPosition };
     }
 
     public void CreateMaze()
     {
-        HeroService heroService = ServiceLocator.GetService<HeroService>();
+        Position heroPosition = ServiceLocator.GetService<HeroService>().SetHeroPosition();
+        Debug.Log("Респаун X:" + heroPosition.x + " Y:" + heroPosition.y);
+
+        Card current = SetStartFields(heroPosition);
+        Stack<Card> way = new Stack<Card>();
+
+        way.Push(current);
+        
+        int mazeLength = Rand.Range(Settings.mazeLengthMin, Settings.mazeLengthMax);
 
         safeFieldsIndex = 0;
-        System.Random rnd = new System.Random(DateTime.Now.Millisecond);
-        Stack<Card> way = new Stack<Card>();
-        Card current = gameFields[(int) heroService.heroPosition.x - 1, (int) heroService.heroPosition.y - 1];
 
-        Debug.Log("X:" + current.position.x + " Y:" + current.position.y);
-        way.Push(current);
-
-        int mazeLength = rnd.Next(Settings.mazeLengthMin, Settings.mazeLengthMax);
-
-        while (mazeLength > safeFieldsIndex) {
-
+        while (mazeLength > safeFieldsIndex)
+        {
             List<Card> availableCards = GetAvailableCards(current);
+            Debug.Log("availableCards.Count" + availableCards.Count);
 
             if (availableCards.Count == 0)
             {
@@ -66,12 +61,12 @@ public class GameFieldService
                 continue;
             }
 
-            int rndIndex = rnd.Next(0, availableCards.Count);
-            Card directionCard = availableCards[rndIndex];
+            Card directionCard = availableCards[Rand.Range(0, availableCards.Count)];
 
             gameData.cards.safety[safeFieldsIndex].position = directionCard.position;
+
             current 
-                = gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1]
+                = gameFields[directionCard.position.arX(), directionCard.position.arY()]
                 = gameData.cards.safety[safeFieldsIndex];
 
             safeFieldsIndex++;
@@ -89,64 +84,52 @@ public class GameFieldService
     {
         List<Card> availableCards = new List<Card>();
 
-        List<Card> surroundingCards = new List<Card> {
-            GetCard(Constants.leftPosition, current.position),
-            GetCard(Constants.rightPosition, current.position),
-            GetCard(Constants.upPosition, current.position),
-            GetCard(Constants.downPosition, current.position)
-        };
-
-        foreach(Card surroundingCard in surroundingCards)
+        foreach (Card surroundingCard in GetSurroundingCards(current.position))
         {
-            if (
-                surroundingCard != null 
-                && surroundingCard.isSafe == false 
-                && surroundingCard.isStart != true
-                )
-            {
-                bool isСontact = IssetContactCard(surroundingCard.position, current.position);
-
-                if (!isСontact) {
-                    Debug.Log("sX:" + surroundingCard.position.x + " sY:" + surroundingCard.position.y);
-                    availableCards.Add(surroundingCard);
-                        };
-            }
+            if (IssetContactCard(surroundingCard.position)) continue;
+            
+            Debug.Log("sX:" + surroundingCard.position.x + " sY:" + surroundingCard.position.y);
+            availableCards.Add(surroundingCard);
         }
 
         return availableCards;
     }
 
-    //если касается то true
-    private bool IssetContactCard(Position surrounding, Position current)
+    private bool IssetContactCard(Position cardPosition)
     {
-        foreach(Position check in Constants.adjacentPositions)
-        {
-            float x = surrounding.x + check.x;
-            float y = surrounding.y + check.y;
+        if (GetSurroundingCards(cardPosition).Count == 3) return false; // не касается
 
-            if ((current.x == x && current.y == y) || x > 10 || x < 1 || y > 10 || y < 1) {
-                continue; 
-            };
-
-            Card checkingCard = gameFields[(int)x - 1, (int)y - 1];
-
-            if (checkingCard.isStart || checkingCard.isSafe) return true;
-        }
-
-        return false;
+        return true;
     }
 
-    private Card GetCard(Position distanse, Position current)
+    private List<Card> GetSurroundingCards(Position current)
     {
-        if (current.x + distanse.x > 0
-            && current.x + distanse.x < 11
-            && current.y + distanse.y < 11
-            && current.y + distanse.y > 0
-            ) {
-            return gameFields[(int)current.x + (int)distanse.x - 1, (int) current.y + (int)distanse.y - 1];
+        List<Card> surroundingCards = new List<Card>();
+
+        Position left = current.GetLeft();
+        Position rigth = current.GetRight();
+        Position up = current.GetUp();
+        Position down = current.GetDown();
+
+        if (left != null) surroundingCards.Add(gameFields[left.arX(), left.arY()]);
+        if (rigth != null) surroundingCards.Add(gameFields[rigth.arX(), rigth.arY()]);
+        if (up != null) surroundingCards.Add(gameFields[up.arX(), up.arY()]);
+        if (down != null) surroundingCards.Add(gameFields[down.arX(), down.arY()]);
+
+        return FilteringAvailableCards(surroundingCards);
+    }
+
+    private List<Card> FilteringAvailableCards(List<Card> cards)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].isStart || cards[i].isSafe)
+            {
+                cards.RemoveAt(i);
+            }
         }
 
-        return null;
+        return cards;
     }
 
     public void setOpenField(Position openedField)
@@ -162,27 +145,37 @@ public class GameFieldService
     /*
      * <summary>Создает опасные поля? пропуская начало и конец </summary>
      */
-    private void SetDangerousFields()
+    private Card[,] SetDangerousFields( List<Card> dangerCards)
     {
+        Card[,] dangerFields = new Card[Constants.fieldSize, Constants.fieldSize];
+
         int dangerousFieldsIndex = 0;
 
-        for (int i = 0; i < Constants.fieldSize; i++)
+        for (int i = 1; i <= Constants.fieldSize; i++)
         {
-            for (int j = 0; j < Constants.fieldSize; j++)
+            for (int j = 1; j <= Constants.fieldSize; j++)
             {
-                if (gameFields[i, j] == null)
-                {
-                    gameFields[i, j] 
-                        = gameData.cards.danger[dangerousFieldsIndex];
-                    gameFields[i, j].position 
-                        = new Position() { x = i + 1, y = j + 1 };
+                Position cardPosition = new Position() { x = i, y = j };
+
+                    Card dangerCard = new Card();
+                    dangerCard.id = dangerCards[dangerousFieldsIndex].id;
+                    dangerCard.imageName = dangerCards[dangerousFieldsIndex].imageName;
+                    dangerCard.text = dangerCards[dangerousFieldsIndex].text;
+                    dangerCard.isOpen = false;
+                    dangerCard.isSafe = false;
+                    dangerCard.isStart = false;
+                    dangerCard.isWin = false;
+                    dangerCard.position = cardPosition;
+
+                    dangerFields[cardPosition.arX(), cardPosition.arY()] = dangerCard;
 
                     dangerousFieldsIndex++;
 
                     dangerousFieldsIndex 
-                        = dangerousFieldsIndex > gameData.cards.danger.Count - 1 ? 0 : dangerousFieldsIndex;
-                }
+                        = dangerousFieldsIndex > dangerCards.Count - 1 ? 0 : dangerousFieldsIndex;
             }
         }
+
+        return dangerFields;
     }
 }

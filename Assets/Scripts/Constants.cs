@@ -20,19 +20,6 @@ public static class Constants
     //позиция по Z открытого поля
     internal const float openedFieldZ = -3;
 
-    //соседние позиции
-    internal static List<Position> adjacentPositions = new List<Position> {
-            new Position {x = 0, y = 1},
-            new Position {x = 0, y = -1},
-            new Position {x = 1, y = 0},
-            new Position {x = -1, y = 0},
-        };
-
-    internal static Position leftPosition = new Position { x = -1, y = 0 };
-    internal static Position rightPosition = new Position { x = 1, y = 0 };
-    internal static Position upPosition = new Position { x = 0, y = 1 };
-    internal static Position downPosition = new Position { x = 0, y = -1 };
-
     //последний  слайд с правилами
     internal static int lastRulesSlide = 5;
     //последний  слайд с историей

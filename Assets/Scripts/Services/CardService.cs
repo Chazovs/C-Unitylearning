@@ -38,7 +38,7 @@ public class CardService
             SceneManager.LoadScene("Menu");
         }
 
-        Card card = gameFieldService.gameFields[(int)heroService.heroPosition.x - 1, (int)heroService.heroPosition.y - 1];
+        Card card = gameFieldService.gameFields[heroService.heroPosition.arX(), heroService.heroPosition.arY()];
 
         if (heroService.heroPosition.onTheWay
             || isCardShowing
@@ -91,7 +91,7 @@ public class CardService
         GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
         gameFieldService.setOpenField(currentCard.position);
 
-        gameFieldService.gameFields[(int)currentCard.position.x-1, (int)currentCard.position.y-1].isOpen = true;
+        gameFieldService.gameFields[currentCard.position.arX(), currentCard.position.arY()].isOpen = true;
         isCardShowing = false;
     }
 

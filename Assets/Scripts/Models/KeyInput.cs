@@ -1,6 +1,6 @@
 ﻿
 public class KeyInput 
 {
-    public float x;
-    public float y;
+    public int x;
+    public int y;
 }

@@ -11,7 +11,7 @@ public class HeroService
     private Vector3 _destination = new Vector3();
     private KeyInput keyInput = new KeyInput();
 
-    public void SetHeroPosition()
+    public Position SetHeroPosition()
     {
         heroPosition.x = Random.Range(1, 11);
         heroPosition.y = Random.Range(1, 11);
@@ -24,6 +24,8 @@ public class HeroService
             );
 
         _destination = GameObjects.hero.transform.position;
+
+        return heroPosition;
     }
 
     public void Move()
@@ -38,8 +40,8 @@ public class HeroService
 
         //если герой не движется, то можно принимать значение ввода
         if (!heroPosition.onTheWay) {
-            keyInput.x = Input.GetAxisRaw("Horizontal");
-            keyInput.y = Input.GetAxisRaw("Vertical");
+            keyInput.x = (int) Input.GetAxisRaw("Horizontal");
+            keyInput.y = (int) Input.GetAxisRaw("Vertical");
         };
 
         if(keyInput.x != 0 || keyInput.y != 0)
