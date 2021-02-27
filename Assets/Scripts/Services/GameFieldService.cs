@@ -18,6 +18,7 @@ public class GameFieldService
         gameData.cards.danger = Shuffler.listShuffler(gameData.cards.danger);
         gameData.cards.safety = Shuffler.listShuffler(gameData.cards.safety);
         gameFields = SetDangerousFields(gameData.cards.danger);
+
         CreateMaze();
     }
 
@@ -39,8 +40,6 @@ public class GameFieldService
     public void CreateMaze()
     {
         Position heroPosition = ServiceLocator.GetService<HeroService>().SetHeroPosition();
-        Debug.Log("Респаун X:" + heroPosition.x + " Y:" + heroPosition.y);
-
         Card current = SetStartFields(heroPosition);
         Stack<Card> way = new Stack<Card>();
 
@@ -53,7 +52,6 @@ public class GameFieldService
         while (mazeLength > safeFieldsIndex)
         {
             List<Card> availableCards = GetAvailableCards(current);
-            Debug.Log("availableCards.Count" + availableCards.Count);
 
             if (availableCards.Count == 0)
             {
@@ -62,7 +60,6 @@ public class GameFieldService
             }
 
             Card directionCard = availableCards[Rand.Range(0, availableCards.Count)];
-
             gameData.cards.safety[safeFieldsIndex].position = directionCard.position;
 
             current 
@@ -71,7 +68,6 @@ public class GameFieldService
 
             safeFieldsIndex++;
 
-            Debug.Log("X:" + current.position.x + " Y:" + current.position.y);
             way.Push(current);
         };
 
@@ -88,7 +84,6 @@ public class GameFieldService
         {
             if (IssetContactCard(surroundingCard.position)) continue;
             
-            Debug.Log("sX:" + surroundingCard.position.x + " sY:" + surroundingCard.position.y);
             availableCards.Add(surroundingCard);
         }
 
@@ -161,7 +156,7 @@ public class GameFieldService
     }
 
     /*
-     * <summary>Создает опасные поля? пропуская начало и конец </summary>
+     * <summary>Создает опасные поля пропуская начало и конец </summary>
      */
     private Card[,] SetDangerousFields( List<Card> dangerCards)
     {
