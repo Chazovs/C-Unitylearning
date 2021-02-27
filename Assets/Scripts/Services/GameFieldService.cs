@@ -97,9 +97,26 @@ public class GameFieldService
 
     private bool IssetContactCard(Position cardPosition)
     {
-        if (GetSurroundingCards(cardPosition).Count == 3) return false; // не касается
+        if (GetEmptyFieldsCount(cardPosition) == 3) return false; // не касается
 
         return true;
+    }
+
+    private int GetEmptyFieldsCount(Position cardPosition)
+    {
+        return GetSurroundingCards(cardPosition).Count + GetOverSideCount(cardPosition);
+    }
+
+    private int GetOverSideCount(Position cardPosition)
+    {
+        int OverSideCount = 0;
+
+        if (cardPosition.GetLeft() == null) OverSideCount++;
+        if (cardPosition.GetRight() == null) OverSideCount++;
+        if (cardPosition.GetUp() == null) OverSideCount++;
+        if (cardPosition.GetDown() == null) OverSideCount++;
+
+        return OverSideCount;
     }
 
     private List<Card> GetSurroundingCards(Position current)
@@ -126,6 +143,7 @@ public class GameFieldService
             if (cards[i].isStart || cards[i].isSafe)
             {
                 cards.RemoveAt(i);
+                i--;
             }
         }
 
