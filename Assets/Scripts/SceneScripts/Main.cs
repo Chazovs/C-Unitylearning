@@ -16,7 +16,8 @@ public class Main : MonoBehaviour
         Langs.SetLangsForMain();
 
         _timer = new Timer();
-
+       
+        ServiceLocator.GetService<HeroService>().SetHeroPosition();
         ServiceLocator.GetService<CardService>().HideCard();
         ServiceLocator.GetService<GameFieldService>().FillGameFields();
 

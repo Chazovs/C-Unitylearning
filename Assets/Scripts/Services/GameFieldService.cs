@@ -20,10 +20,10 @@ public class GameFieldService
         gameData.cards.safety = Shuffler.listShuffler(gameData.cards.safety);
 
         SetDangerousFields();
-        SetGoalAndStartFields();
+        SetStartFields();
         CreateMaze();
-        /*SetSafetyCardsInField();*/
     }
+
     public void SetGoalImg()
     {
         GameObjects.endPoint.transform.position = new Vector3(
@@ -34,7 +34,7 @@ public class GameFieldService
 
     }
 
-    private void SetGoalAndStartFields()
+    private void SetStartFields()
     {
         HeroService heroService = ServiceLocator.GetService<HeroService>();
 
@@ -45,12 +45,13 @@ public class GameFieldService
     public void CreateMaze()
     {
         HeroService heroService = ServiceLocator.GetService<HeroService>();
+
         safeFieldsIndex = 0;
         System.Random rnd = new System.Random(DateTime.Now.Millisecond);
         Stack<Card> way = new Stack<Card>();
+        Card current = gameFields[(int) heroService.heroPosition.x - 1, (int) heroService.heroPosition.y - 1];
 
-        Card current = gameFields[(int)heroService.heroPosition.x - 1, (int)heroService.heroPosition.y - 1];
-
+        Debug.Log("X:" + current.position.x + " Y:" + current.position.y);
         way.Push(current);
 
         int mazeLength = rnd.Next(Settings.mazeLengthMin, Settings.mazeLengthMax);
@@ -69,13 +70,13 @@ public class GameFieldService
             Card directionCard = availableCards[rndIndex];
 
             gameData.cards.safety[safeFieldsIndex].position = directionCard.position;
-            gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1]
+            current 
+                = gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1]
                 = gameData.cards.safety[safeFieldsIndex];
 
             safeFieldsIndex++;
 
-            current = gameFields[(int)directionCard.position.x - 1, (int)directionCard.position.y - 1];
-
+            Debug.Log("X:" + current.position.x + " Y:" + current.position.y);
             way.Push(current);
         };
 
@@ -88,7 +89,7 @@ public class GameFieldService
     {
         List<Card> availableCards = new List<Card>();
 
-        List<Card> surroundingCards = new List<Card> { 
+        List<Card> surroundingCards = new List<Card> {
             GetCard(Constants.leftPosition, current.position),
             GetCard(Constants.rightPosition, current.position),
             GetCard(Constants.upPosition, current.position),
@@ -105,7 +106,10 @@ public class GameFieldService
             {
                 bool isСontact = IssetContactCard(surroundingCard.position, current.position);
 
-                if (!isСontact) availableCards.Add(surroundingCard);
+                if (!isСontact) {
+                    Debug.Log("sX:" + surroundingCard.position.x + " sY:" + surroundingCard.position.y);
+                    availableCards.Add(surroundingCard);
+                        };
             }
         }
 
@@ -120,7 +124,9 @@ public class GameFieldService
             float x = surrounding.x + check.x;
             float y = surrounding.y + check.y;
 
-            if ((current.x == x && current.y == y) || x > 10 || x < 1 || y >10 || y < 1) continue;
+            if ((current.x == x && current.y == y) || x > 10 || x < 1 || y > 10 || y < 1) {
+                continue; 
+            };
 
             Card checkingCard = gameFields[(int)x - 1, (int)y - 1];
 

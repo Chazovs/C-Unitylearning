@@ -11,7 +11,7 @@ public class HeroService
     private Vector3 _destination = new Vector3();
     private KeyInput keyInput = new KeyInput();
 
-    public HeroService()
+    public void SetHeroPosition()
     {
         heroPosition.x = Random.Range(1, 11);
         heroPosition.y = Random.Range(1, 11);
