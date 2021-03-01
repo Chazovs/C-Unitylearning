@@ -14,6 +14,7 @@ public class GameObjects
     public static GameObject main;
     public static GameObject openField;
     public static GameObject apiController;
+    public static GameObject toggleMuteBtn;
 
     public GameObjects()
     {
@@ -29,5 +30,6 @@ public class GameObjects
         main = GameObject.Find("main");
         openField = GameObject.Find("openField");
         apiController = GameObject.Find("apiController");
+        toggleMuteBtn = GameObject.Find("muteBtn");
     }
 }

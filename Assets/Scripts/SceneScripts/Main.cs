@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
@@ -16,7 +17,10 @@ public class Main : MonoBehaviour
         Langs.SetLangsForMain();
 
         _timer = new Timer();
-       
+
+        GameObjects.toggleMuteBtn.GetComponent<Button>()
+            .onClick.AddListener(() => ServiceLocator.GetService<ButtonService>().toggleMuteHandler());
+
         ServiceLocator.GetService<CardService>().HideCard();
         ServiceLocator.GetService<GameFieldService>().FillGameFields();
 

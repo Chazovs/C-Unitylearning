@@ -10,6 +10,11 @@ public class ButtonService
         SceneManager.LoadScene("Game");
     }
 
+    public void toggleMuteHandler()
+    {
+        AudioListener.volume = 1 - AudioListener.volume;
+    }
+
     internal void rulHisLeftButtonHandler(string topic, int currentSlide)
     {
         int nextSlide = currentSlide -1;
