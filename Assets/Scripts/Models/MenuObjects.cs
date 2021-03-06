@@ -20,11 +20,15 @@ class MenuObjects
     public static GameObject myBooksBtn;
     public static GameObject apiController;
     public static GameObject cardText;
-
     public static GameObject mainCanva;
     public static GameObject startMenu;
     public static GameObject bookSectionTitle;
     public static GameObject rulHisTitle;
+    public static GameObject happyEnd;
+    public static GameObject happyEndText;
+    public static GameObject cardImage;
+    public static GameObject winSound;
+    public static GameObject losingSound;
 
     public MenuObjects()
     {
@@ -44,13 +48,16 @@ class MenuObjects
         apiController = GameObject.Find("apiController");
         cardText = GameObject.Find("cardText");
         rulHisTitle = GameObject.Find("rulHisTitle");
-
         mainCamera = GameObject.Find("mainCamera");
         startMenuElements = GameObject.Find("startMenuElements");
-
         mainCanva = GameObject.Find("mainCanva");
         startMenu = GameObject.Find("startMenu");
         bookSectionTitle = GameObject.Find("bookSectionTitle");
         exceptionMsg = GameObject.Find("exceptionMsg");
+        happyEnd = GameObject.Find("happyEnd");
+        happyEndText = GameObject.Find("happyEndText");
+        cardImage = GameObject.Find("cardImage");
+        winSound = GameObject.Find("winSound");
+        losingSound = GameObject.Find("losingSound");
     }
 }

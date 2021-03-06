@@ -32,17 +32,35 @@ public class Menu : MonoBehaviour
         newBooks = bookService.GetBooks(Constants.newBooksType);
 
         MenuObjects.startMenu.SetActive(false);
-
+        MenuObjects.happyEnd.SetActive(false);
+        
         if (Settings.endType != "")
         {
             MenuObjects.rightButton.SetActive(false);
             MenuObjects.leftButton.SetActive(false);
             MenuObjects.rulHisTitle.SetActive(false);
 
-            MenuObjects.cardText.GetComponent<Text>().text
-                = Langs.GetMessge(Settings.endType);
-            MenuObjects.rulHisImage.GetComponent<Image>().sprite
-                = Resources.Load<Sprite>("img/endimg/" + Settings.endType);
+            if (Settings.endType == "sadEnd")
+            {
+                MenuObjects.cardText.GetComponent<Text>().text
+               = Langs.GetMessge(Settings.endType);
+                MenuObjects.rulHisImage.GetComponent<Image>().sprite
+                    = Resources.Load<Sprite>("img/endimg/" + Settings.endType);
+                MenuObjects.losingSound.GetComponent<AudioSource>().Play();
+            }
+
+            if (Settings.endType == "happyEnd")
+            {
+                MenuObjects.cardText.SetActive(false);
+                MenuObjects.rulHisImage.SetActive(false);
+                MenuObjects.cardImage.SetActive(false);
+
+                MenuObjects.happyEndText.GetComponent<Text>().text
+              = Langs.GetMessge(Settings.endType);
+
+                MenuObjects.happyEnd.SetActive(true);
+                MenuObjects.winSound.GetComponent<AudioSource>().Play();
+            }
         }
 
         //leftButton

@@ -171,5 +171,6 @@ public class ButtonService
 
         MenuObjects.mainCanva.SetActive(false);
         MenuObjects.startMenu.SetActive(true);
+        MenuObjects.happyEnd.SetActive(false);
     }
 }
