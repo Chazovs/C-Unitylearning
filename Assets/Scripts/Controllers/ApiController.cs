@@ -67,7 +67,7 @@ public class ApiController : MonoBehaviour
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(Constants.serverUrl
             + "images/cards/"
             + imageName
-            + ".jpg"
+            + ".png"
             );
 
         yield return www.SendWebRequest();

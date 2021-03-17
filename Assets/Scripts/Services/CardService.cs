@@ -87,6 +87,11 @@ public class CardService
 
     public void safetyAction()
     {
+        Main.timer = new Timer();
+        AudioSource music = GameObjects.mainMusic.GetComponent<AudioSource>();
+
+        music.Stop();
+        music.Play();
         HideCard();
         GameFieldService gameFieldService = ServiceLocator.GetService<GameFieldService>();
         gameFieldService.setOpenField(currentCard.position);

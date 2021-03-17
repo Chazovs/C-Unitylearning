@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Main : MonoBehaviour
 {
    
-    private Timer _timer;
+    public static Timer timer;
 
     void Start()
     {
@@ -16,7 +16,7 @@ public class Main : MonoBehaviour
 
         Langs.SetLangsForMain();
 
-        _timer = new Timer();
+        timer = new Timer();
 
         GameObjects.toggleMuteBtn.GetComponent<Button>()
             .onClick.AddListener(() => ServiceLocator.GetService<ButtonService>().toggleMuteHandler());
@@ -30,7 +30,7 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        _timer.UpdateTimer();
+        timer.UpdateTimer();
         ServiceLocator.GetService<HeroService>().Move();
     }
 }

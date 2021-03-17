@@ -147,10 +147,24 @@ public class GameFieldService
 
     public void setOpenField(Position openedField)
     {
-         GameObject instance = UnityEngine.Object.Instantiate(GameObjects.openField);
+        int fieldId = Random.Range(1, 7);
+        GameObject mashroom;
+
+        switch (fieldId)
+        {
+            case 1: mashroom = GameObjects.openField_1; break;
+            case 2: mashroom = GameObjects.openField_2; break;
+            case 3: mashroom = GameObjects.openField_3; break;
+            case 4: mashroom = GameObjects.openField_4; break;
+            case 5: mashroom = GameObjects.openField_5; break;
+            default: mashroom = GameObjects.openField_6; break;
+        }
+
+        HeroService service = ServiceLocator.GetService<HeroService>();
+        GameObject instance = UnityEngine.Object.Instantiate(mashroom);
          instance.transform.position = new Vector3(
-            instance.transform.position.x + (Constants.step / 2) + (Constants.step * openedField.x ) - Constants.step,
-            instance.transform.position.y + (Constants.step / 2) + (Constants.step * openedField.y) - Constants.step,
+            instance.transform.position.x + (Constants.step / 2) + (Constants.step * service.previousPosition.x) - Constants.step,
+            instance.transform.position.y + (Constants.step / 2) + (Constants.step * service.previousPosition.y) - Constants.step,
             Constants.openedFieldZ
             );
     }

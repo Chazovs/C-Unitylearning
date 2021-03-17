@@ -15,7 +15,7 @@ public static class Constants
     public const int fieldSize = 10;
 
     //время игры в секундах
-    internal const float totalTime = 200f;
+    internal const float totalTime = 90f;
     
     //позиция по Z открытого поля
     internal const float openedFieldZ = -3;
