@@ -82,13 +82,5 @@ public class Menu : MonoBehaviour
         //skipButton
         MenuObjects.skipButton.GetComponent<Button>()
             .onClick.AddListener(() => buttonService.rulHisSkipButtonHandler());
-
-        //myBooksBtn
-        MenuObjects.myBooksBtn.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.myBooksBtnHandler());
-
-        //newBooksBtn
-        MenuObjects.newBooksBtn.GetComponent<Button>()
-            .onClick.AddListener(() => buttonService.newBooksBtnHandler());
     }
 }

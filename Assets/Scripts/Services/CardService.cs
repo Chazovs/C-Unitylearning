@@ -73,11 +73,13 @@ public class CardService
 
         if (card.isSafe)
         {
+            goCardButtonComponent.onClick.RemoveListener(dangerousAction);
             goCardButtonComponent.onClick.RemoveListener(safetyAction);
             goCardButtonComponent.onClick.AddListener(safetyAction);
         }
         else {
             goCardButtonComponent.onClick.RemoveListener(dangerousAction);
+            goCardButtonComponent.onClick.RemoveListener(safetyAction);
             goCardButtonComponent.onClick.AddListener(dangerousAction);
         }
 

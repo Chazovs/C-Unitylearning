@@ -26,10 +26,6 @@ public class Langs
             = GetMessge("HISTORY_BTN");
         MenuObjects.startGameBtn.GetComponentInChildren<Text>().text
             = GetMessge("START_BTN");
-        MenuObjects.myBooksBtn.GetComponentInChildren<Text>().text
-            = GetMessge("MY_BOOKS_BTN");
-        MenuObjects.newBooksBtn.GetComponentInChildren<Text>().text
-            = GetMessge("NEW_BOOKS_BTN");
         MenuObjects.bookSectionTitle.GetComponentInChildren<Text>().text
             = GetMessge("YOUR_BOOKS_TITLE");
         MenuObjects.rulHisTitle.GetComponentInChildren<Text>().text

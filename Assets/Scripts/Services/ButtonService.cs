@@ -167,7 +167,6 @@ public class ButtonService
         BookService bookService = ServiceLocator.GetService<BookService>();
 
         bookService.setCurrentMyBook();
-        bookService.SetMyBooksDropDown();
 
         MenuObjects.mainCanva.SetActive(false);
         MenuObjects.startMenu.SetActive(true);

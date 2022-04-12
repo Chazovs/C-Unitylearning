@@ -82,7 +82,7 @@ public class HeroService
         //если мы пришли
         if (heroPosition.onTheWay && GameObjects.hero.transform.position == _destination)
         {
-            previousPosition =heroPosition;
+            previousPosition = heroPosition;
             heroPosition = newPosition;
             heroPosition.onTheWay = false;
 
